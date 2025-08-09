@@ -336,8 +336,8 @@
                     <input type="text" id="quizNombre" name="nombre" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
                 <div>
-                    <label for="quizCorreo" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                    <input type="email" id="quizCorreo" name="correo" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                    <label for="quizEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
+                    <input type="email" id="quizEmail" name="email" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
                 <button type="submit" class="w-full main-button mt-6">
                     <span id="quizStartBtnText">Iniciar Prueba</span>
@@ -358,8 +358,8 @@
                     <input type="text" id="regNombre" name="nombre" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
                 <div>
-                    <label for="regCorreo" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                    <input type="email" id="regCorreo" name="correo" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                    <label for="regEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
+                    <input type="email" id="regEmail" name="email" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
                 <button type="submit" class="w-full main-button mt-6">
                     <span id="registrationBtnText">Inscribirme</span>
@@ -513,7 +513,7 @@
             const registrationBtnText = document.getElementById('registrationBtnText');
             const quizStartForm = document.getElementById('quizStartForm');
             const quizAttemptsMessage = document.getElementById('quizAttemptsMessage');
-            const quizCorreoInput = document.getElementById('quizCorreo');
+            const quizEmailInput = document.getElementById('quizEmail');
 
             function toggleModal(modalId, show) {
                 const modal = document.getElementById(modalId);
@@ -596,8 +596,8 @@
                  toggleModal('quizStartModal', true);
             });
             
-            quizCorreoInput.addEventListener('blur', async () => {
-                const email = quizCorreoInput.value;
+            quizEmailoInput.addEventListener('blur', async () => {
+                const email = quizEmailInput.value;
                 if (email) {
                     const checkAttemptsUrl = `${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`;
                     try {
@@ -627,7 +627,7 @@
                 e.preventDefault();
                 const formData = new FormData(quizStartForm);
                 quizUserDetails.fullName = formData.get('nombre');
-                quizUserDetails.email = formData.get('correo');
+                quizUserDetails.email = formData.get('email');
                 toggleModal('quizStartModal', false);
                 startQuiz();
             });
@@ -906,4 +906,3 @@
     </script>
 </body>
 </html>
-
