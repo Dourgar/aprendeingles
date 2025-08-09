@@ -3,74 +3,1231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Inscripción Simple</title>
+    <title>Aprendiendo Inglés con Douglas</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <style>
+        /* Estilos personalizados para el scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .prose a {
+            color: #2b6cb0;
+            text-decoration: underline;
+        }
+        .prose a:hover {
+            color: #1e4b85;
+        }
+        /* Estilos del Quiz */
+        .option-button {
+            display: block;
+            width: 100%;
+            padding: 1.1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            text-align: left;
+            border: 2px solid #e0e7ee;
+            border-radius: 0.75rem;
+            background-color: #ffffff;
+            color: #3f4a5a;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .option-button:hover {
+            background-color: #e6f2ff;
+            border-color: #6366f1;
+            color: #4338ca;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2);
+        }
+        .option-button.selected {
+            background-color: #c7d2fe;
+            border-color: #4338ca;
+            color: #312e81;
+            box-shadow: 0 2px 8px rgba(67, 56, 202, 0.2);
+        }
+        .multiple-select-option {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 1.1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            border: 2px solid #e0e7ee;
+            border-radius: 0.75rem;
+            background-color: #ffffff;
+            color: #3f4a5a;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        .multiple-select-option:hover {
+            background-color: #e6f2ff;
+            border-color: #6366f1;
+            color: #4338ca;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2);
+        }
+        .multiple-select-option.selected {
+            background-color: #c7d2fe;
+            border-color: #4338ca;
+            color: #312e81;
+            box-shadow: 0 2px 8px rgba(67, 56, 202, 0.2);
+        }
+        .multiple-select-option input[type="checkbox"] {
+            margin-right: 1rem;
+            transform: scale(1.5);
+            accent-color: #6366f1;
+        }
+        .main-button, .send-button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .main-button {
+            background-image: linear-gradient(to right, #6366f1, #4338ca);
+            color: white;
+        }
+        .main-button:hover {
+            background-image: linear-gradient(to right, #4338ca, #312e81);
+            transform: translateY(-4px);
+        }
+        .main-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .main-button:disabled, .send-button:disabled {
+            background-image: linear-gradient(to right, #cbd5e1, #94a3b8);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .send-button {
+            background-image: linear-gradient(to right, #10b981, #059669);
+            color: white;
+        }
+        .send-button:hover {
+            background-image: linear-gradient(to right, #059669, #047857);
+            transform: translateY(-4px);
+        }
+        .send-button:active {
+            transform: translateY(0);
+            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar-container {
+            width: 100%;
+            background-color: #e2e8f0;
+            border-radius: 9999px;
+            height: 12px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #6366f1;
+            width: 0%;
+            border-radius: 9999px;
+            transition: width 0.3s ease-out;
+        }
+        .direct-answer-input {
+            width: 100%;
+            padding: 1.1rem 1.5rem;
+            border: 2px solid #e0e7ee;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            color: #3f4a5a;
+        }
+        .direct-answer-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #6366f1;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #final-thanks-message {
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #4338ca;
+            margin-top: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+            line-height: 1.3;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            background-color: #ffffff;
+            padding: 3rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+        }
+        #final-thanks-message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+        }
+        .timer-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3f4a5a;
+            background-color: #e6f2ff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            margin-left: auto;
+            min-width: 120px;
+            text-align: center;
+        }
+        .timer-display.low-time {
+            color: #dc2626;
+            background-color: #fee2e2;
+        }
+        .multi-part-question-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .multi-part-question-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .multi-part-question-item label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+        .module-selection-card {
+            background-color: #f0f4f8;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .module-selection-card select {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border-radius: 0.75rem;
+            border: 2px solid #e0e7ee;
+            background-color: #ffffff;
+            color: #3f4a5a;
+        }
+        .module-selection-card select:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+        }
+        .attempts-counter {
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        .disabled-module-link {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+            filter: grayscale(100%);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-800 flex items-center justify-center min-h-screen">
+<body class="bg-gray-100 font-sans antialiased text-gray-800">
 
-    <div class="bg-white rounded-lg shadow-xl p-8 w-full md:w-1/2 lg:w-1/3">
-        <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Formulario de Inscripción</h2>
-        <form id="registrationForm" class="space-y-5">
-            <div>
-                <label for="regNombre" class="block text-gray-700 text-lg font-medium mb-2">Nombre:</label>
-                <input type="text" id="regNombre" name="nombre" class="w-full px-5 py-3 border border-gray-300 rounded-lg" required>
+    <nav id="mainNav" class="bg-gradient-to-r from-blue-600 to-blue-800 p-4 shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-white text-3xl font-bold tracking-wide">Aprendiendo Inglés con Douglas</a>
+            <div id="navButtons" class="space-x-4">
+                <button id="navLoginBtn" class="bg-white text-blue-800 py-2 px-6 rounded-full font-semibold hover:bg-gray-200 transition duration-300 shadow-md">Iniciar Sesión</button>
+                <button id="navRegisterBtn" class="bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-600 transition duration-300 shadow-md">Inscribirse</button>
             </div>
-            <div>
-                <label for="regApellido" class="block text-gray-700 text-lg font-medium mb-2">Apellido:</label>
-                <input type="text" id="regApellido" name="apellido" class="w-full px-5 py-3 border border-gray-300 rounded-lg" required>
+        </div>
+    </nav>
+
+    <div id="mainContent">
+        <section id="introSection" class="relative bg-gradient-to-br from-blue-500 to-indigo-600 text-white py-20 px-4 text-center shadow-inner">
+            <div class="absolute inset-0 bg-black opacity-30"></div>
+            <div class="relative z-10 container mx-auto">
+                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6 animate-fade-in-down">¡Desbloquea tu Potencial en Inglés!</h1>
+                <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90 animate-fade-in-up">Sumérgete en un viaje fascinante para dominar el inglés de forma práctica y divertida. ¡Tu aventura comienza aquí!</p>
+                <button id="startLearningBtn" class="bg-yellow-400 text-blue-900 py-4 px-10 rounded-full text-xl font-bold uppercase hover:bg-yellow-500 transition duration-300 transform hover:scale-105 shadow-lg">Comienza a Aprender Hoy</button>
             </div>
-            <div>
-                <label for="regCorreo" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                <input type="email" id="regCorreo" name="correo" class="w-full px-5 py-3 border border-gray-300 rounded-lg" required>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg text-xl font-bold hover:bg-blue-700 transition duration-200">
-                Inscribirme
-            </button>
-        </form>
-        <div id="statusMessage" class="mt-4 text-center text-lg font-medium hidden"></div>
+        </section>
+        
+        <div id="quiz-app-container" class="hidden container mx-auto mt-8 p-4 md:p-8">
+            <div id="quiz-app" class="bg-white p-8 rounded-lg shadow-lg"></div>
+        </div>
     </div>
 
-    <script>
-        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+    <div id="registerModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-2/3 lg:w-1/2 relative transform scale-95 transition-transform duration-300 ease-out">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold" id="closeRegisterModal">&times;</button>
+            <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Formulario de Inscripción</h2>
+            <form id="registrationForm" class="space-y-5">
+                <div>
+                    <label for="regNombre" class="block text-gray-700 text-lg font-medium mb-2">Nombre:</label>
+                    <input type="text" id="regNombre" name="nombre" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                </div>
+                <div>
+                    <label for="regApellido" class="block text-gray-700 text-lg font-medium mb-2">Apellido:</label>
+                    <input type="text" id="regApellido" name="apellido" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                </div>
+                <div>
+                    <label for="regCedula" class="block text-gray-700 text-lg font-medium mb-2">Cédula de Identidad:</label>
+                    <input type="text" id="regCedula" name="cedula" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                </div>
+                <div>
+                    <label for="regEdad" class="block text-gray-700 text-lg font-medium mb-2">Edad:</label>
+                    <input type="number" id="regEdad" name="edad" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                </div>
+                <div>
+                    <label for="regCorreo" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
+                    <input type="email" id="regCorreo" name="correo" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-700 transition duration-300 text-xl shadow-md">Inscribirme</button>
+                <p id="registrationMessage" class="text-center mt-4 text-lg font-medium"></p>
+            </form>
+        </div>
+    </div>
 
-            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwXQWc5eBuRXYwL2_1nHPsXqdEiJ3L4MBf2IrI_G04mOXlCtmOZN4BJtt0vQnqmFkqA/exec";
-            const form = event.target;
-            const statusMessage = document.getElementById('statusMessage');
+    <div id="loginModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-1/3 relative transform scale-95 transition-transform duration-300 ease-out">
+            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold" id="closeLoginModal">&times;</button>
+            <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Iniciar Sesión</h2>
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label for="loginCorreo" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
+                    <input type="email" id="loginCorreo" name="correo" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-gray-700 text-lg font-medium mb-2">Contraseña:</label>
+                    <div class="relative">
+                        <input type="password" id="loginPassword" name="password" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
+                        <button type="button" id="togglePassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-600">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-700 transition duration-300 text-xl shadow-md">Acceder al Aula</button>
+                <p id="loginMessage" class="text-center mt-4 text-lg font-medium"></p>
+                <button type="button" id="forgotPasswordBtn" class="w-full text-center text-blue-500 hover:underline mt-2">¿Olvidaste tu contraseña?</button>
+            </form>
+        </div>
+    </div>
 
+    <div id="aulaVirtual" class="hidden min-h-screen">
+        <header class="bg-gradient-to-r from-blue-700 to-blue-900 text-white p-4 shadow-xl">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-3xl font-bold">¡Bienvenido al Aula, <span id="studentNameDisplay"></span>!</h1>
+                <button id="logoutBtn" class="bg-red-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-red-600 transition duration-300 shadow-md">Cerrar Sesión</button>
+            </div>
+        </header>
+        <main class="container mx-auto mt-8 p-4 md:p-8 flex flex-col md:flex-row gap-8">
+            <aside class="w-full md:w-1/4 bg-white p-6 rounded-lg shadow-lg max-h-[80vh] overflow-y-auto no-scrollbar">
+                <h3 class="text-2xl font-bold mb-6 text-blue-700">Contenido del Curso</h3>
+                <nav id="moduleMenu" class="space-y-4"></nav>
+            </aside>
+            <section id="contentArea" class="w-full md:w-3/4 bg-white p-8 rounded-lg shadow-lg">
+                <div id="introContent" class="space-y-6">
+                    <h2 class="text-4xl font-extrabold text-blue-700">¡Bienvenidos!</h2>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        Este es el espacio donde podrás acceder a todos los módulos y recursos de tu curso.
+                        ¡Esperamos que disfrutes de tu aprendizaje!
+                    </p>
+                    <p class="text-lg text-gray-600 leading-relaxed">
+                        Selecciona un módulo del menú de la izquierda para comenzar.
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+    // Reemplaza "https://script.google.com/macros/s/AKfycbxNszu-7L1rmAyOI8OyhFAl4_bosXw4dgxUa9k34wO-FlmzBOlFwtKIwsazFrXOgYrMuQ/exec" con la URL de tu Apps Script
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxNszu-7L1rmAyOI8OyhFAl4_bosXw4dgxUa9k34wO-FlmzBOlFwtKIwsazFrXOgYrMuQ/exec";
+
+    // EmailJS initialization con tu nueva Public Key
+    (function() {
+        emailjs.init("7FE4lqcCZ69cThSp_");
+    })();
+
+    // --- Quiz Data (copy-pasted from test.html) ---
+    const allQuestions = [
+        {
+            question: "Presentación y saludos (formal/informal)<br>Which of the following are informal greetings? (Select all that apply) / ¿Cuáles de las siguientes son saludos informales? (Selecciona todas las que apliquen):",
+            type: "multiple-select",
+            options: [
+                { text: "a) Hi", value: "a", isCorrect: true },
+                { text: "b) Good evening", value: "b", isCorrect: false },
+                { text: "c) Morning", value: "c", isCorrect: true },
+                { text: "d) Hello", value: "d", isCorrect: false },
+                { text: "e) How’s everything?", value: "e", isCorrect: true },
+                { text: "f) Good morning", value: "f", isCorrect: false },
+                { text: "g) How’s it going?", value: "g", isCorrect: true }
+            ],
+            topic: "Presentación y saludos (formal/informal)",
+            scoreParts: 4
+        },
+        {
+            question: "Verbo “To be” (presente)<br>Completa la oración: 'He _______ a doctor.' con la forma correcta del verbo 'to be'",
+            type: "single-choice",
+            options: ["is", "am", "are"],
+            answer: "is",
+            topic: "Verbo “To be” (presente)",
+            scoreParts: 1
+        },
+        {
+            question: "Adjetivos Posesivos<br>Completa la oración: 'This is ___ car. (He)' con el adjetivo posesivo correcto.",
+            type: "multi-direct-answer",
+            parts: [{ prompt: "This is ___ car. (He)", answer: ["his"] }],
+            topic: "Adjetivos Posesivos",
+            scoreParts: 1
+        },
+        {
+            question: "Días de la semana<br>La traducción correcta de 'Lunes' es 'Monday'.",
+            type: "true-false",
+            answer: true,
+            topic: "Días de la semana",
+            scoreParts: 1
+        },
+        {
+            question: "Despedidas<br>Select the appropriate ways to say goodbye. / Selecciona las formas en que podemos despedirnos (Escoge todas las que apliquen):",
+            type: "multiple-select",
+            options: [
+                { text: "a) Bye", value: "a", isCorrect: true },
+                { text: "b) See you later", value: "b", isCorrect: true },
+                { text: "c) Good night", value: "c", isCorrect: true },
+                { text: "d) Hello", value: "d", isCorrect: false },
+                { text: "e) What’s up?", value: "e", isCorrect: false },
+                { text: "f) How do you do?", value: "f", isCorrect: false },
+                { text: "g) Good morning", value: "g", isCorrect: false }
+            ],
+            topic: "Despedidas",
+            scoreParts: 4
+        },
+        {
+            question: "Días de la semana<br>Select the correct order. / Selecciona el orden correcto:",
+            type: "single-choice",
+            options: [
+                "a) Wednesday, Monday, Tuesday, Thursday, Friday, Saturday, Sunday",
+                "b) Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
+                "c) Monday, Thursday, Wednesday, Tuesday, Friday, Saturday, Sunday",
+                "d) Monday, Tuesday, Wednesday, Thursday, Friday, Sunday, Saturday"
+            ],
+            answer: "b) Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
+            topic: "Días de la semana",
+            scoreParts: 1
+        },
+        {
+            question: "Artículos A - AN<br>Completa la oración: 'It's ___ apple.' con el artículo correcto.",
+            type: "multi-direct-answer",
+            parts: [{ prompt: "It's ___ apple.", answer: ["an"] }],
+            topic: "Artículos A - AN",
+            scoreParts: 1
+        },
+        {
+            question: "Pronombres Personales<br>'Nosotros' se traduce como 'We'.",
+            type: "true-false",
+            answer: true,
+            topic: "Pronombres Personales",
+            scoreParts: 1
+        },
+        {
+            question: "Meses del año<br>Which of these are months of the year? (Select all that apply) / ¿Cuáles de estos son meses del año? (Selecciona todas las que apliquen):",
+            type: "multiple-select",
+            options: [
+                { text: "a) January", value: "a", isCorrect: true },
+                { text: "b) Morning", value: "b", isCorrect: false },
+                { text: "c) Saturday", value: "c", isCorrect: false },
+                { text: "d) April", value: "d", isCorrect: true },
+                { text: "e) Friday", value: "e", isCorrect: false },
+                { text: "f) December", value: "f", isCorrect: true },
+                { text: "g) August", value: "g", isCorrect: true }
+            ],
+            topic: "Meses del año",
+            scoreParts: 4
+        },
+        {
+            question: "Números cardinales y ordinales<br>Choose the correct ordinal numbers. / Escoge los números ordinales:",
+            type: "multiple-select",
+            options: [
+                { text: "a) First", value: "a", isCorrect: true },
+                { text: "b) Three", value: "b", isCorrect: false },
+                { text: "c) Second", value: "c", isCorrect: true },
+                { text: "d) Twelve", "value": "d", isCorrect: false },
+                { text: "e) Third", value: "e", isCorrect: true },
+                { text: "f) Fifth", value: "f", isCorrect: true },
+                { text: "g) Eighteen", value: "g", isCorrect: false }
+            ],
+            topic: "Números cardinales y ordinales",
+            scoreParts: 4
+        },
+        {
+            question: "Verbo “To be” (presente)<br>La traducción de la oración 'Ellos son mis amigos' es 'They are my friends'.",
+            type: "true-false",
+            answer: true,
+            topic: "Verbo “To be” (presente)",
+            scoreParts: 1
+        },
+        {
+            question: "Números Cardinales<br>Traduce los siguientes números:",
+            type: "multi-direct-answer",
+            parts: [
+                { prompt: "1. Uno", answer: ["One"] },
+                { prompt: "2. Dos", answer: ["Two"] },
+                { prompt: "3. Tres", answer: ["Three"] },
+                { prompt: "4. Cuatro", answer: ["Four"] },
+                { prompt: "5. Cinco", answer: ["Five"] }
+            ],
+            topic: "Números Cardinales",
+            scoreParts: 5
+        },
+        {
+            question: "Artículos A - AN<br>'An' se usa antes de una palabra que comienza con una vocal.",
+            type: "true-false",
+            answer: true,
+            topic: "Artículos A - AN",
+            scoreParts: 1
+        },
+        {
+            question: "Preguntas con “To be”<br>Rearrange the words to form a correct question. / Reorganiza las palabras para formar una pregunta correcta: a good student / you / are",
+            type: "multi-direct-answer",
+            parts: [
+                { prompt: "1. a good student / you / are", answer: ["Are you a good student?"] }
+            ],
+            topic: "Preguntas con “To be”",
+            scoreParts: 1
+        }
+    ];
+    // --- END OF QUIZ DATA ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const startLearningBtn = document.getElementById('startLearningBtn');
+        const introSection = document.getElementById('introSection');
+        const quizAppContainer = document.getElementById('quiz-app-container');
+        const navLoginBtn = document.getElementById('navLoginBtn');
+        const navRegisterBtn = document.getElementById('navRegisterBtn');
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const closeRegisterModal = document.getElementById('closeRegisterModal');
+        const registrationForm = document.getElementById('registrationForm');
+        const registrationMessage = document.getElementById('registrationMessage');
+
+        // Event Listeners for Nav Buttons
+        navLoginBtn.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+            setTimeout(() => {
+                loginModal.querySelector('div').classList.remove('scale-95');
+                loginModal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        });
+
+        navRegisterBtn.addEventListener('click', () => {
+            registerModal.classList.remove('hidden');
+            setTimeout(() => {
+                registerModal.querySelector('div').classList.remove('scale-95');
+                registerModal.querySelector('div').classList.add('scale-100');
+            }, 10);
+        });
+
+        closeLoginModal.addEventListener('click', () => {
+            loginModal.querySelector('div').classList.remove('scale-100');
+            loginModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                loginModal.classList.add('hidden');
+            }, 300);
+        });
+
+        closeRegisterModal.addEventListener('click', () => {
+            registerModal.querySelector('div').classList.remove('scale-100');
+            registerModal.querySelector('div').classList.add('scale-95');
+            setTimeout(() => {
+                registerModal.classList.add('hidden');
+            }, 300);
+        });
+
+        // Event Listener for Registration Form
+        registrationForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(registrationForm);
             const data = {
-                nombre: form.regNombre.value,
-                apellido: form.regApellido.value,
-                correo: form.regCorreo.value
+                type: 'inscription',
+                nombre: formData.get('nombre'),
+                apellido: formData.get('apellido'),
+                cedula: formData.get('cedula'),
+                edad: formData.get('edad'),
+                correo: formData.get('correo')
             };
+
+            registrationMessage.textContent = 'Enviando tu inscripción...';
+            registrationMessage.className = 'text-center mt-4 text-lg font-medium text-blue-500';
 
             try {
                 const response = await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
+                    mode: 'no-cors', // Apps Script requiere 'no-cors'
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data)
                 });
                 
-                const result = await response.json();
-                
-                if (result.success) {
-                    statusMessage.textContent = '¡Inscripción exitosa!';
-                    statusMessage.className = 'mt-4 text-center text-lg font-medium text-green-600';
-                    form.reset();
-                } else {
-                    statusMessage.textContent = 'Error: ' + (result.error || 'No se pudo procesar la solicitud.');
-                    statusMessage.className = 'mt-4 text-center text-lg font-medium text-red-600';
-                }
-            } catch (error) {
-                console.error('Error al enviar la solicitud:', error);
-                statusMessage.textContent = 'Ocurrió un error de conexión.';
-                statusMessage.className = 'mt-4 text-center text-lg font-medium text-red-600';
-            }
-            statusMessage.style.display = 'block';
-        });
-    </script>
+                // Con 'no-cors', no podemos leer la respuesta, solo asumimos que funcionó si no hay error de red.
+                registrationMessage.textContent = '¡Inscripción enviada con éxito! Revisa tu correo electrónico para tu contraseña.';
+                registrationMessage.className = 'text-center mt-4 text-lg font-medium text-green-600';
+                registrationForm.reset();
+                setTimeout(() => {
+                    closeRegisterModal.click();
+                    registrationMessage.textContent = '';
+                }, 5000);
 
-</body>
+            } catch (error) {
+                console.error('Error al enviar la inscripción:', error);
+                registrationMessage.textContent = 'Error al enviar la inscripción. Por favor, intenta de nuevo.';
+                registrationMessage.className = 'text-center mt-4 text-lg font-medium text-red-600';
+            }
+        });
+
+        // Event Listener for "Comienza a Aprender Hoy" button
+        startLearningBtn.addEventListener('click', () => {
+            introSection.style.display = 'none';
+            quizAppContainer.classList.remove('hidden');
+            loadQuizContent();
+        });
+
+        function loadQuizContent() {
+            const quizApp = document.getElementById('quiz-app');
+            quizApp.innerHTML = `
+                <div id="main-header" class="text-center mb-6">
+                    <h1 class="text-4xl font-extrabold text-blue-800 mb-2">Aprendiendo Inglés con Douglas</h1>
+                    <p class="text-lg text-gray-600 italic">"Tu camino al éxito en inglés, domina el inglés a tu propio ritmo."</p>
+                </div>
+
+                <div id="start-screen" class="text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-2">¡Te damos la bienvenida a tu primera prueba!</h2>
+                    <h3 class="text-2xl font-bold text-blue-700 mb-4">Módulo 1 de Inglés Básico</h3>
+
+                    <div class="mb-4 space-y-3">
+                        <input type="text" id="user-full-name" placeholder="Tu Nombre-apellido" class="direct-answer-input" required>
+                        <input type="email" id="user-email" placeholder="Tu Correo Electrónico" class="direct-answer-input" required>
+                    </div>
+
+                    <div id="instructions-screen-start" class="text-left text-gray-700 text-lg space-y-4 mb-8">
+                        <h3 class="text-2xl font-bold text-blue-700 mb-2">Instrucciones de la Prueba</h3>
+                        <p class="font-bold text-blue-700"><i class="fas fa-exclamation-triangle text-red-600 mr-2"></i> **Importante:** Solo tienes **una única oportunidad** para completar esta prueba.</p>
+                        <p class="font-bold text-blue-700"><i class="fas fa-star text-blue-600 mr-2"></i> Cada respuesta correcta vale 0.4 puntos. Puntuación máxima: 20 puntos.</p>
+                        <p><i class="fas fa-book-reader text-blue-600 mr-2"></i> Lee cada ítem cuidadosamente antes de responder.</p>
+                        <p><i class="fas fa-check-square text-blue-600 mr-2"></i> Para los ítems de **selección múltiple**, puedes elegir una o varias opciones. Cada opción correcta suma puntos.</p>
+                        <p><i class="fas fa-keyboard text-blue-600 mr-2"></i> Para los ítems de **respuesta directa**, escribe tu respuesta en el campo provisto. Asegúrate de la ortografía y gramática.</p>
+                        <p><i class="fas fa-arrows-alt-h text-blue-600 mr-2"></i> Puedes navegar entre los ítems usando los botones 'Atrás' y 'Siguiente'.</p>
+                        <p class="font-bold text-blue-700"><i class="fas fa-check-circle text-green-600 mr-2"></i> **Revisa cuidadosamente tus respuestas** antes de hacer clic en "Finalizar Prueba".</p>
+                        <p class="font-bold text-blue-700"><i class="fas fa-hourglass-half text-blue-600 mr-2"></i> El tiempo límite es de 120 minutos. </p>
+                        <p class="font-bold text-blue-700"><i class="fas fa-hourglass-half text-blue-600 mr-2"></i> Los resultados serán enviados a tu correo electrónico. ¡Mucha suerte!</p>
+                    </div>
+
+                    <div class="flex justify-center mt-6">
+                        <button id="start-quiz-button" class="main-button" disabled>Comenzar Prueba</button>
+                    </div>
+                </div>
+
+                <div id="quiz-screen" class="hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <span id="question-counter" class="text-gray-600 font-medium text-lg"></span>
+                        <div id="timer-display" class="timer-display">00:00</div>
+                    </div>
+                    <div class="progress-bar-container mb-6"><div id="progress-bar" class="progress-bar"></div></div>
+                    <h2 id="question-text" class="text-2xl font-semibold text-gray-800 mb-6"></h2>
+                    <div id="options-container" class="flex flex-col gap-3"></div>
+                    <div class="flex justify-between gap-4 mt-8">
+                        <button id="prev-button" class="main-button w-1/2" disabled>Atrás</button>
+                        <button id="next-button" class="main-button w-1/2">Siguiente</button>
+                    </div>
+                </div>
+
+                <div id="results-screen" class="hidden text-center">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Prueba Finalizada!</h2>
+                    <p class="text-lg text-gray-600">Por favor, guarda tus resultados para continuar.</p>
+                    <button id="send-delia-email-button" class="send-button mt-8 w-full">
+                        <i class="fas fa-save"></i> Guardar Resultados
+                    </button>
+                    <div id="email-status-message" class="text-sm mt-2 text-gray-600 hidden"></div>
+                </div>
+            `;
+            initializeQuizLogic();
+        }
+
+        // The quiz logic from test.html is now part of principal.html
+        function initializeQuizLogic() {
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const resultsScreen = document.getElementById('results-screen');
+            const startQuizButton = document.getElementById('start-quiz-button');
+            const nextButton = document.getElementById('next-button');
+            const prevButton = document.getElementById('prev-button');
+            const optionsContainer = document.getElementById('options-container');
+            const questionCounter = document.getElementById('question-counter');
+            const progressBar = document.getElementById('progress-bar');
+            const questionText = document.getElementById('question-text');
+            const finalThanksMessage = document.getElementById('final-thanks-message');
+            const sendDeliaEmailButton = document.getElementById('send-delia-email-button');
+            const emailStatusMessage = document.getElementById('email-status-message');
+            const timerDisplay = document.getElementById('timer-display');
+            const userFullNameInput = document.getElementById('user-full-name');
+            const userEmailInput = document.getElementById('user-email');
+
+            let currentQuestionIndex = 0;
+            let userAnswers = {};
+            let timerInterval;
+            let timeRemaining = 120 * 60; // 120 minutes in seconds
+            let startTime; // Para almacenar el tiempo de inicio de la prueba
+
+            function renderQuestion() {
+                const questionData = allQuestions[currentQuestionIndex];
+                questionCounter.textContent = `Item ${currentQuestionIndex + 1} de ${allQuestions.length}`;
+                questionText.innerHTML = questionData.question;
+                optionsContainer.innerHTML = '';
+
+                progressBar.style.width = `${((currentQuestionIndex + 1) / allQuestions.length) * 100}%`;
+
+                if (questionData.type === 'single-choice') {
+                    questionData.options.forEach(option => {
+                        const optionButton = document.createElement('button');
+                        optionButton.className = 'option-button';
+                        optionButton.textContent = option;
+                        optionButton.addEventListener('click', () => {
+                            selectSingleOption(optionButton, option);
+                        });
+                        optionsContainer.appendChild(optionButton);
+                    });
+                } else if (questionData.type === 'multiple-select') {
+                    questionData.options.forEach(option => {
+                        const multipleSelectOption = document.createElement('label');
+                        multipleSelectOption.className = 'multiple-select-option';
+                        multipleSelectOption.innerHTML = `
+                            <input type="checkbox" value="${option.value}" class="mr-4">
+                            <span>${option.text}</span>
+                        `;
+                        const checkbox = multipleSelectOption.querySelector('input');
+                        checkbox.addEventListener('change', () => {
+                            selectMultipleOption(checkbox, option.value);
+                        });
+                        optionsContainer.appendChild(multipleSelectOption);
+                    });
+                } else if (questionData.type === 'multi-direct-answer') {
+                    const multiPartContainer = document.createElement('div');
+                    multiPartContainer.className = 'multi-part-question-container';
+                    questionData.parts.forEach((part, partIndex) => {
+                        const multiPartItem = document.createElement('div');
+                        multiPartItem.className = 'multi-part-question-item';
+                        multiPartItem.innerHTML = `
+                            <label for="direct-answer-${currentQuestionIndex}-${partIndex}">${part.prompt}</label>
+                            <input type="text" id="direct-answer-${currentQuestionIndex}-${partIndex}" class="direct-answer-input" placeholder="Tu respuesta" required>
+                        `;
+                        multiPartContainer.appendChild(multiPartItem);
+                    });
+                    optionsContainer.appendChild(multiPartContainer);
+                } else if (questionData.type === 'true-false') {
+                    const trueButton = document.createElement('button');
+                    trueButton.className = 'option-button';
+                    trueButton.textContent = 'Verdadero';
+                    trueButton.addEventListener('click', () => selectTrueFalse(trueButton, true));
+                    optionsContainer.appendChild(trueButton);
+                    
+                    const falseButton = document.createElement('button');
+                    falseButton.className = 'option-button';
+                    falseButton.textContent = 'Falso';
+                    falseButton.addEventListener('click', () => selectTrueFalse(falseButton, false));
+                    optionsContainer.appendChild(falseButton);
+                }
+
+                if (userAnswers[currentQuestionIndex]) {
+                    restoreAnswers(questionData, userAnswers[currentQuestionIndex]);
+                }
+
+                updateNavButtons();
+            }
+
+            function selectSingleOption(button, option) {
+                userAnswers[currentQuestionIndex] = option;
+                const options = optionsContainer.querySelectorAll('.option-button');
+                options.forEach(opt => opt.classList.remove('selected'));
+                button.classList.add('selected');
+                updateNavButtons();
+            }
+
+            function selectMultipleOption(checkbox, value) {
+                let selectedValues = userAnswers[currentQuestionIndex] || [];
+                if (checkbox.checked) {
+                    if (!selectedValues.includes(value)) {
+                        selectedValues.push(value);
+                    }
+                } else {
+                    selectedValues = selectedValues.filter(val => val !== value);
+                }
+                userAnswers[currentQuestionIndex] = selectedValues;
+                const label = checkbox.closest('.multiple-select-option');
+                if (label) {
+                    label.classList.toggle('selected', checkbox.checked);
+                }
+                updateNavButtons();
+            }
+
+            function selectTrueFalse(button, value) {
+                userAnswers[currentQuestionIndex] = value;
+                const options = optionsContainer.querySelectorAll('.option-button');
+                options.forEach(opt => opt.classList.remove('selected'));
+                button.classList.add('selected');
+                updateNavButtons();
+            }
+
+            function restoreAnswers(questionData, answers) {
+                if (questionData.type === 'single-choice') {
+                    optionsContainer.querySelectorAll('.option-button').forEach(button => {
+                        if (button.textContent === answers) {
+                            button.classList.add('selected');
+                        }
+                    });
+                } else if (questionData.type === 'multiple-select') {
+                    optionsContainer.querySelectorAll('.multiple-select-option').forEach(label => {
+                        const checkbox = label.querySelector('input');
+                        if (answers.includes(checkbox.value)) {
+                            checkbox.checked = true;
+                            label.classList.add('selected');
+                        }
+                    });
+                } else if (questionData.type === 'multi-direct-answer') {
+                    questionData.parts.forEach((part, partIndex) => {
+                        const input = document.getElementById(`direct-answer-${currentQuestionIndex}-${partIndex}`);
+                        if (answers[partIndex]) {
+                            input.value = answers[partIndex];
+                        }
+                    });
+                } else if (questionData.type === 'true-false') {
+                    optionsContainer.querySelectorAll('.option-button').forEach(button => {
+                        if ((button.textContent === 'Verdadero' && answers === true) || (button.textContent === 'Falso' && answers === false)) {
+                            button.classList.add('selected');
+                        }
+                    });
+                }
+            }
+
+            function updateDirectAnswers() {
+                const questionData = allQuestions[currentQuestionIndex];
+                if (questionData.type === 'multi-direct-answer') {
+                    const inputs = optionsContainer.querySelectorAll('input.direct-answer-input');
+                    const answers = Array.from(inputs).map(input => input.value.trim());
+                    userAnswers[currentQuestionIndex] = answers;
+                }
+            }
+            
+            function updateNavButtons() {
+                prevButton.disabled = currentQuestionIndex === 0;
+
+                if (currentQuestionIndex === allQuestions.length - 1) {
+                    nextButton.textContent = 'Finalizar Prueba';
+                } else {
+                    nextButton.textContent = 'Siguiente';
+                }
+            }
+
+            function validateCurrentQuestion() {
+                const questionData = allQuestions[currentQuestionIndex];
+                if (questionData.type === 'multi-direct-answer') {
+                    const inputs = optionsContainer.querySelectorAll('input.direct-answer-input');
+                    for (const input of inputs) {
+                        if (input.value.trim() === '') {
+                            alert('Por favor, completa todos los campos del ítem antes de avanzar.');
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            function evaluateUserAnswers() {
+                const feedbackDetails = [];
+                let totalScore = 0;
+
+                allQuestions.forEach((question, index) => {
+                    const userAnswer = userAnswers[index];
+                    let questionScore = 0;
+                    let isCorrect = false;
+                    let correctAnswersText = '';
+                    let userAnswersText = '';
+                    let validationStatus = 'incorrect';
+                    let rawUserAnswer = userAnswer;
+
+                    if (question.type === 'single-choice') {
+                        isCorrect = (userAnswer === question.answer);
+                        if (isCorrect) {
+                            questionScore = question.scoreParts;
+                        }
+                        correctAnswersText = question.answer;
+                        userAnswersText = userAnswer || 'No respondido';
+                        validationStatus = isCorrect ? 'correct' : 'incorrect';
+                    } else if (question.type === 'multiple-select') {
+                        const correctOptions = question.options.filter(opt => opt.isCorrect).map(opt => opt.value);
+                        const userOptions = userAnswer || [];
+                        
+                        let correctSelected = userOptions.filter(ans => correctOptions.includes(ans)).length;
+                        let incorrectSelected = userOptions.filter(ans => !correctOptions.includes(ans)).length;
+                        
+                        let partialScore = (correctSelected - incorrectSelected) * (question.scoreParts / correctOptions.length);
+                        questionScore = Math.max(0, partialScore);
+                        
+                        if (correctSelected === correctOptions.length && incorrectSelected === 0) {
+                            validationStatus = 'correct';
+                        } else if (correctSelected > 0 || incorrectSelected > 0) {
+                            validationStatus = 'partial';
+                        } else {
+                            validationStatus = 'incorrect';
+                        }
+
+                        isCorrect = (questionScore === question.scoreParts);
+                        correctAnswersText = question.options.filter(opt => opt.isCorrect).map(opt => opt.text).join(', ');
+                        userAnswersText = (userOptions.length > 0) ? question.options.filter(opt => userOptions.includes(opt.value)).map(opt => opt.text).join(', ') : 'No respondido';
+                    } else if (question.type === 'multi-direct-answer') {
+                        if (userAnswer) {
+                            let correctCount = 0;
+                            userAnswer.forEach((answer, partIndex) => {
+                                const correctAnswer = question.parts[partIndex].answer;
+                                if (correctAnswer.includes(answer.toLowerCase())) {
+                                    correctCount++;
+                                }
+                            });
+                            questionScore = correctCount * (question.scoreParts / question.parts.length);
+                            isCorrect = (correctCount === question.parts.length);
+                        }
+                        correctAnswersText = question.parts.map(part => `${part.prompt.split('___')[0]} **${part.answer[0]}**`).join('\n');
+                        userAnswersText = (userAnswer) ? userAnswer.map((ans, partIndex) => `${question.parts[partIndex].prompt.split('___')[0]} **${ans}**`).join('\n') : 'No respondido';
+                        validationStatus = isCorrect ? 'correct' : 'incorrect';
+                    } else if (question.type === 'true-false') {
+                        isCorrect = (userAnswer === question.answer);
+                        if (isCorrect) {
+                            questionScore = question.scoreParts;
+                        }
+                        correctAnswersText = question.answer ? 'Verdadero' : 'Falso';
+                        userAnswersText = (userAnswer !== undefined) ? (userAnswer ? 'Verdadero' : 'Falso') : 'No respondido';
+                        validationStatus = isCorrect ? 'correct' : 'incorrect';
+                    }
+
+                    totalScore += questionScore;
+                    feedbackDetails.push({
+                        questionText: question.question,
+                        userAnswer: userAnswersText,
+                        correctAnswer: correctAnswersText,
+                        isCorrect: isCorrect,
+                        validationStatus: validationStatus
+                    });
+                });
+
+                return {
+                    totalScore: totalScore,
+                    feedbackDetails: feedbackDetails
+                };
+            }
+
+
+            function sendResultsToAppsScript(fullName, email, finalScore) {
+                const data = {
+                    type: 'quiz_results',
+                    fullName: fullName,
+                    email: email,
+                    finalScore: finalScore.toFixed(2)
+                };
+
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(() => console.log('Resultados del quiz enviados a Google Sheets.'))
+                .catch(error => console.error('Error al enviar los resultados a Google Sheets:', error));
+            }
+
+            function stripHtml(html) {
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                return div.textContent || div.innerText || '';
+            }
+
+            function sendResultsEmail(fullName, email, finalScore, elapsedTime, feedbackDetails) {
+                
+                let comprehensionLevel = "Básico";
+                let testStatus = "Reprobado";
+                let isPassing = false;
+                
+                if (finalScore >= 10) {
+                    isPassing = true;
+                    testStatus = "Aprobado";
+                    if (finalScore >= 15) {
+                         comprehensionLevel = "Intermedio";
+                    }
+                }
+                
+                let fullFeedback = '';
+                
+                fullFeedback += `
+¡Hola ${fullName}!
+
+Aquí están los resultados de tu prueba de Inglés:
+
+----------------------------------------------------
+Nombre: ${fullName}
+Correo electrónico: ${email}
+Tiempo de respuesta: ${elapsedTime}
+Puntuación final: ${finalScore.toFixed(2)}/20
+Estado de la prueba: ${testStatus}
+Nivel de Comprensión: ${comprehensionLevel}
+----------------------------------------------------
+
+A continuación, puedes revisar los ítems que respondiste incorrectamente para mejorar:
+
+`;
+
+                const incorrectAnswers = feedbackDetails.filter(item => !item.isCorrect);
+
+                if (incorrectAnswers.length > 0) {
+                    incorrectAnswers.forEach((item, index) => {
+                        const cleanQuestion = stripHtml(item.questionText);
+                        
+                        let feedbackMessage = '';
+                        if (item.validationStatus === 'partial') {
+                           feedbackMessage = `Tu respuesta es parcialmente correcta. La respuesta completa es: ${item.correctAnswer}`;
+                        } else {
+                           feedbackMessage = `Tu respuesta es incorrecta. La respuesta correcta es: ${item.correctAnswer}`;
+                        }
+                        
+                        fullFeedback += `
+Ítem ${index + 1}: [INCORRECTO]
+Pregunta: ${cleanQuestion}
+Tu respuesta: ${item.userAnswer}
+Feedback: ${feedbackMessage}
+\n
+`;
+                    });
+                    fullFeedback += `¡No te desanimes! Cada error es una oportunidad de aprendizaje. Repasar los temas te ayudará a consolidar tus conocimientos. ¡Estamos aquí para apoyarte en tu camino para dominar el inglés!`;
+                } else {
+                    fullFeedback += `¡Excelente trabajo! Has demostrado un dominio completo del módulo. ¡Sigue así!`;
+                }
+
+                const templateParams = {
+                    user_full_name: fullName,
+                    user_email: email,
+                    score: finalScore.toFixed(2),
+                    response_time: elapsedTime,
+                    comprehension_level: comprehensionLevel,
+                    test_status: testStatus,
+                    full_feedback: fullFeedback,
+                    is_passing: isPassing,
+                };
+                
+                emailStatusMessage.classList.remove('hidden');
+                emailStatusMessage.textContent = 'Enviando resultados por correo electrónico...';
+                
+                emailjs.send('service_plel29w', 'template_bo27pgn', templateParams)
+                    .then((response) => {
+                        emailStatusMessage.textContent = '¡Resultados enviados por correo electrónico con éxito!';
+                        emailStatusMessage.className = 'text-sm mt-2 text-green-600';
+                        console.log('EMAILJS SUCCESS:', response.status, response.text);
+                    }, (error) => {
+                        emailStatusMessage.textContent = 'Error al enviar el correo. Por favor, contacta al soporte.';
+                        emailStatusMessage.className = 'text-sm mt-2 text-red-600';
+                        console.error('EMAILJS FAILED:', error);
+                    });
+            }
+
+            function formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+            
+            function formatElapsedTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${minutes} minutos y ${secs} segundos`;
+            }
+
+            function startTimer() {
+                timerDisplay.classList.remove('low-time');
+                startTime = new Date();
+                timerInterval = setInterval(() => {
+                    timeRemaining--;
+                    timerDisplay.textContent = formatTime(timeRemaining);
+
+                    if (timeRemaining <= 60 && !timerDisplay.classList.contains('low-time')) {
+                        timerDisplay.classList.add('low-time');
+                    }
+
+                    if (timeRemaining <= 0) {
+                        clearInterval(timerInterval);
+                        alert('¡Se acabó el tiempo! La prueba ha finalizado.');
+                        finishQuiz();
+                    }
+                }, 1000);
+            }
+            
+            function finishQuiz() {
+                clearInterval(timerInterval);
+                quizScreen.classList.add('hidden');
+                resultsScreen.classList.add('hidden');
+
+                const endTime = new Date();
+                const totalTimeInSeconds = Math.round((endTime - startTime) / 1000);
+                const elapsedTimeFormatted = formatElapsedTime(totalTimeInSeconds);
+                
+                const fullName = userFullNameInput.value.trim();
+                const email = userEmailInput.value.trim();
+                
+                // Obtener los resultados y la retroalimentación detallada
+                const results = evaluateUserAnswers();
+                const finalScore = results.totalScore;
+                const feedbackDetails = results.feedbackDetails;
+
+                // Envía los resultados automáticamente
+                sendResultsEmail(fullName, email, finalScore, elapsedTimeFormatted, feedbackDetails);
+                sendResultsToAppsScript(fullName, email, finalScore);
+
+                const thanksDiv = document.createElement('div');
+                thanksDiv.id = 'final-thanks-message';
+                thanksDiv.innerHTML = `
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Gracias por completar la prueba!</h2>
+                        <p class="text-lg text-gray-600">Hemos enviado tus resultados a tu correo electrónico.</p>
+                        <div class="mt-8">
+                            <button id="backToHomeBtn" class="main-button">Volver al Inicio</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(thanksDiv);
+                setTimeout(() => {
+                    thanksDiv.classList.add('show');
+                    document.getElementById('backToHomeBtn').addEventListener('click', () => {
+                        window.location.reload();
+                    });
+                }, 100);
+            }
+
+            [userFullNameInput, userEmailInput].forEach(input => {
+                input.addEventListener('input', () => {
+                    if (userFullNameInput.value.trim() && userEmailInput.value.trim()) {
+                        startQuizButton.disabled = false;
+                    } else {
+                        startQuizButton.disabled = true;
+                    }
+                });
+            });
+
+            startQuizButton.addEventListener('click', async () => {
+                const fullName = userFullNameInput.value.trim();
+                const email = userEmailInput.value.trim();
+                if (fullName && email) {
+                    // Iniciar la prueba inmediatamente
+                    startScreen.classList.add('hidden');
+                    quizScreen.classList.remove('hidden');
+                    startTimer();
+                    renderQuestion();
+                    
+                    // Enviar datos a Apps Script en segundo plano
+                    const data = {
+                        type: 'check_quiz_status',
+                        email: email
+                    };
+
+                    try {
+                        const response = await fetch(APPS_SCRIPT_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        console.log('Solicitud a Apps Script enviada en segundo plano.');
+
+                    } catch (error) {
+                        console.error('Error al verificar el estado:', error);
+                    }
+
+                } else {
+                    alert('Por favor, ingresa tu nombre y correo electrónico para comenzar.');
+                }
+            });
+
+            nextButton.addEventListener('click', () => {
+                updateDirectAnswers();
+                if (validateCurrentQuestion()) {
+                    if (currentQuestionIndex < allQuestions.length - 1) {
+                        currentQuestionIndex++;
+                        renderQuestion();
+                    } else {
+                        finishQuiz();
+                    }
+                }
+            });
+
+            prevButton.addEventListener('click', () => {
+                updateDirectAnswers();
+                currentQuestionIndex--;
+                renderQuestion();
+            });
+        }
+    });
+</script>
+
 </html>
