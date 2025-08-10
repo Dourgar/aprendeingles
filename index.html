@@ -361,6 +361,10 @@
                     <input type="text" id="regCedula" name="cedula" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
                 <div>
+                    <label for="regEdad" class="block text-gray-700 text-lg font-medium mb-2">Edad:</label>
+                    <input type="number" id="regEdad" name="edad" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required min="10" max="100">
+                </div>
+                <div>
                     <label for="regEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
                     <input type="email" id="regEmail" name="correo" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
                 </div>
@@ -373,11 +377,17 @@
         </div>
     </div>
 
+    <div id="final-thanks-message" class="hidden">
+        ¡Gracias por completar el quiz!<br><br>
+        Tus resultados serán enviados a tu correo electrónico.<br><br>
+        <button id="backToHomeBtn" class="send-button mt-6">Volver a Inicio</button>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxhe-a_Wv5kAyFdbpm3iVCmpjyq34osMaW86NatNEy-Nny8N6RFBK4Kn-NBNYlA70iB4A/exec";
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyg-JXNRT42Ja5WIEHLAUSPi9wBHWedqXbBNvt3j6ifBLza507KH1cViVrjub7DSH4qHg/exec";
             const QUIZ_DURATION_SECONDS = 1200; // 20 minutos
-            
+
             const allQuestions = [
                 {
                     question: "Presentación y saludos (formal/informal)<br>Which of the following are informal greetings? (Select all that apply) / ¿Cuáles de las siguientes son saludos informales? (Selecciona todas las que apliquen):",
@@ -498,7 +508,7 @@
             let startTime;
             let isQuizActive = false;
             let quizUserDetails = {};
-            
+
             const introSection = document.getElementById('introSection');
             const startLearningBtn = document.getElementById('startLearningBtn');
             const quizInstructionsSection = document.getElementById('quizInstructionsSection');
@@ -517,6 +527,7 @@
             const quizStartForm = document.getElementById('quizStartForm');
             const quizAttemptsMessage = document.getElementById('quizAttemptsMessage');
             const quizEmailInput = document.getElementById('quizEmail');
+            const backToHomeBtn = document.getElementById('backToHomeBtn');
 
             function toggleModal(modalId, show) {
                 const modal = document.getElementById(modalId);
@@ -532,11 +543,11 @@
             navRegisterBtn.addEventListener('click', () => {
                 toggleModal('registerModal', true);
             });
-            
+
             closeRegisterModalBtn.addEventListener('click', () => {
                 toggleModal('registerModal', false);
             });
-            
+
             closeQuizStartModalBtn.addEventListener('click', () => {
                 toggleModal('quizStartModal', false);
             });
@@ -559,6 +570,7 @@
                     type: 'inscription',
                     nombre: formData.get('nombre'),
                     cedula: formData.get('cedula'),
+                    edad: formData.get('edad'),
                     correo: formData.get('correo')
                 };
 
@@ -570,7 +582,7 @@
                         },
                         body: JSON.stringify(data)
                     });
-                    
+
                     const result = await response.json();
                     if (result.success) {
                         registerMessage.textContent = '¡Inscripción exitosa! Serás notificado por correo electrónico.';
@@ -598,11 +610,11 @@
                 introSection.classList.add('hidden');
                 quizInstructionsSection.classList.remove('hidden');
             });
-            
+
             openQuizStartModalBtn.addEventListener('click', () => {
                  toggleModal('quizStartModal', true);
             });
-            
+
             quizEmailInput.addEventListener('blur', async () => {
                 const email = quizEmailInput.value;
                 if (email) {
@@ -707,7 +719,7 @@
                         <button id="nextBtn" class="main-button" disabled>Siguiente <i class="fas fa-arrow-right"></i></button>
                     </div>
                 `;
-                
+
                 quizApp.innerHTML = questionHtml;
                 updateButtonsState();
 
@@ -759,129 +771,105 @@
                                 label.classList.remove('selected');
                             }
                             const selectedValues = Array.from(optionsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-                            userAnswers[currentQuestionIndex] = selectedValues;
+                            userAnswers[currentQuestionIndex] = selectedValues.length > 0 ? selectedValues : null;
                             updateButtonsState();
                         }
                     });
                 } else if (questionData.type === 'multi-direct-answer') {
                     optionsContainer.addEventListener('input', () => {
-                        const inputs = optionsContainer.querySelectorAll('input[type="text"]');
-                        const answers = Array.from(inputs).map(input => input.value);
-                        userAnswers[currentQuestionIndex] = answers;
+                        const inputs = Array.from(optionsContainer.querySelectorAll('.direct-answer-input'));
+                        const allFilled = inputs.every(input => input.value.trim() !== '');
+                        userAnswers[currentQuestionIndex] = inputs.map(input => input.value);
                         updateButtonsState();
                     });
                 }
+
+                document.getElementById('prevBtn').addEventListener('click', () => {
+                    if (currentQuestionIndex > 0) {
+                        currentQuestionIndex--;
+                        renderQuestion();
+                    }
+                });
+
+                document.getElementById('nextBtn').addEventListener('click', () => {
+                    if (currentQuestionIndex < allQuestions.length - 1) {
+                        currentQuestionIndex++;
+                        renderQuestion();
+                    } else {
+                        finishQuiz();
+                    }
+                });
             }
 
             function updateButtonsState() {
-                const nextBtn = document.getElementById('nextBtn');
                 const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
                 const currentAnswer = userAnswers[currentQuestionIndex];
-                
-                let isAnswered = false;
-                const questionData = allQuestions[currentQuestionIndex];
-                if (questionData.type === 'multiple-select' || questionData.type === 'multi-direct-answer') {
-                    isAnswered = Array.isArray(currentAnswer) && currentAnswer.length > 0 && currentAnswer.some(ans => ans && ans.trim() !== '');
-                } else {
-                    isAnswered = currentAnswer !== null && currentAnswer !== '';
-                }
-
-                nextBtn.disabled = !isAnswered;
-                if (currentQuestionIndex === allQuestions.length - 1) {
-                    nextBtn.innerHTML = 'Finalizar <i class="fas fa-check-circle"></i>';
-                    nextBtn.classList.remove('main-button');
-                    nextBtn.classList.add('send-button');
-                } else {
-                    nextBtn.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
-                    nextBtn.classList.remove('send-button');
-                    nextBtn.classList.add('main-button');
-                }
 
                 if (currentQuestionIndex === 0) {
                     prevBtn.disabled = true;
-                    prevBtn.classList.add('opacity-50');
                 } else {
                     prevBtn.disabled = false;
-                    prevBtn.classList.remove('opacity-50');
                 }
 
-                nextBtn.onclick = handleNext;
-                prevBtn.onclick = handlePrev;
-            }
-
-            function handleNext() {
-                if (currentQuestionIndex < allQuestions.length - 1) {
-                    currentQuestionIndex++;
-                    renderQuestion();
+                const isAnswered = currentAnswer !== null && (Array.isArray(currentAnswer) ? currentAnswer.every(ans => ans.trim() !== '') : currentAnswer.trim() !== '');
+                if (isAnswered) {
+                    nextBtn.disabled = false;
                 } else {
-                    finishQuiz();
+                    nextBtn.disabled = true;
+                }
+
+                if (currentQuestionIndex === allQuestions.length - 1) {
+                    nextBtn.innerHTML = 'Enviar Respuestas <i class="fas fa-paper-plane"></i>';
+                    if (isAnswered) {
+                        nextBtn.classList.remove('main-button');
+                        nextBtn.classList.add('send-button');
+                    } else {
+                        nextBtn.classList.add('main-button');
+                        nextBtn.classList.remove('send-button');
+                    }
+                } else {
+                    nextBtn.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
+                    nextBtn.classList.add('main-button');
+                    nextBtn.classList.remove('send-button');
                 }
             }
 
-            function handlePrev() {
-                if (currentQuestionIndex > 0) {
-                    currentQuestionIndex--;
-                    renderQuestion();
-                }
-            }
-
-            function finishQuiz() {
-                if (!isQuizActive) return;
+            async function finishQuiz() {
                 isQuizActive = false;
                 clearInterval(timerInterval);
-                quizAppContainer.style.display = 'none';
-                
                 const endTime = new Date();
-                const totalTimeInSeconds = Math.round((endTime - startTime) / 1000);
-                const elapsedTimeFormatted = formatElapsedTime(totalTimeInSeconds);
-                
-                const dataToSend = {
+                const elapsedTimeInSeconds = Math.floor((endTime - startTime) / 1000);
+
+                const data = {
                     type: 'quiz_results',
                     fullName: quizUserDetails.fullName,
                     email: quizUserDetails.email,
-                    responseTime: elapsedTimeFormatted,
-                    userAnswers: userAnswers 
+                    responseTime: formatElapsedTime(elapsedTimeInSeconds),
+                    userAnswers: userAnswers
                 };
 
-                fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(dataToSend)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('Resultados del quiz enviados a Apps Script y evaluados:', data);
-                })
-                .catch(error => {
-                    console.error('Error al enviar los resultados a Apps Script:', error);
-                    alert('Ocurrió un error al enviar los resultados del quiz. Por favor, revisa la consola del navegador.');
-                });
-
-                const thanksDiv = document.createElement('div');
-                thanksDiv.id = 'final-thanks-message';
-                thanksDiv.innerHTML = `
-                    <div class="text-center">
-                        <h2 class="text-3xl font-bold text-gray-800 mb-4">¡Gracias por completar la prueba!</h2>
-                        <p class="text-lg text-gray-600">Hemos enviado tus respuestas para su evaluación. Los resultados se enviarán a tu correo electrónico.</p>
-                        <div class="mt-8">
-                            <button id="backToHomeBtn" class="main-button">Volver al Inicio</button>
-                        </div>
-                    </div>
-                `;
-                document.body.appendChild(thanksDiv);
-                setTimeout(() => {
-                    thanksDiv.classList.add('show');
-                    document.getElementById('backToHomeBtn').addEventListener('click', () => {
-                        window.location.reload();
+                try {
+                    const response = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
                     });
-                }, 100);
+                    const result = await response.json();
+                    if (result.success) {
+                        document.getElementById('quiz-app-container').classList.add('hidden');
+                        const finalMessage = document.getElementById('final-thanks-message');
+                        finalMessage.classList.remove('hidden');
+                        setTimeout(() => finalMessage.classList.add('show'), 100);
+                    } else {
+                        alert('Error al enviar los resultados: ' + result.message);
+                    }
+                } catch (error) {
+                    console.error('Error al enviar los resultados:', error);
+                    alert('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
+                }
             }
 
             function startTimer() {
@@ -909,6 +897,10 @@
                 const remainingSeconds = seconds % 60;
                 return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
             }
+
+            backToHomeBtn.addEventListener('click', () => {
+                window.location.reload();
+            });
         });
     </script>
 </body>
