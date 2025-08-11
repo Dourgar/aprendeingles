@@ -385,524 +385,414 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyBup2z52fs8KzBuDRGhvdNxZhW13h7VQYD9ZUaXFw4lF4ZrGszaiMgora2qjYHUIfsWQ/exec";
-            const QUIZ_DURATION_SECONDS = 1200; // 20 minutos
-
-            const allQuestions = [
-                {
-                    question: "Presentación y saludos (formal/informal)<br>Which of the following are informal greetings? (Select all that apply) / ¿Cuáles de las siguientes son saludos informales? (Selecciona todas las que apliquen):",
-                    type: "multiple-select",
-                    options: [
-                        { text: "a) Hi", value: "a" },
-                        { text: "b) Good evening", value: "b" },
-                        { text: "c) Morning", value: "c" },
-                        { text: "d) Hello", value: "d" },
-                        { text: "e) How’s everything?", value: "e" },
-                        { text: "f) Good morning", value: "f" },
-                        { text: "g) How’s it going?", value: "g" }
-                    ]
-                },
-                {
-                    question: "Verbo “To be” (presente)<br>Completa la oración: 'He _______ a doctor.' con la forma correcta del verbo 'to be'",
-                    type: "single-choice",
-                    options: ["is", "am", "are"]
-                },
-                {
-                    question: "Adjetivos Posesivos<br>Completa la oración: 'This is ___ car. (He)' con el adjetivo posesivo correcto.",
-                    type: "multi-direct-answer",
-                    parts: [{ prompt: "This is ___ car. (He)", type: "text" }]
-                },
-                {
-                    question: "Días de la semana<br>La traducción correcta de 'Lunes' es 'Monday'.",
-                    type: "true-false"
-                },
-                {
-                    question: "Despedidas<br>Select the appropriate ways to say goodbye. / Selecciona las formas en que podemos despedirnos (Escoge todas las que apliquen):",
-                    type: "multiple-select",
-                    options: [
-                        { text: "a) Bye", value: "a" },
-                        { text: "b) See you later", value: "b" },
-                        { text: "c) Good night", value: "c" },
-                        { text: "d) Hello", value: "d" },
-                        { text: "e) What’s up?", value: "e" },
-                        { text: "f) How do you do?", value: "f" },
-                        { text: "g) Good morning", value: "g" }
-                    ]
-                },
-                {
-                    question: "Días de la semana<br>Select the correct order. / Selecciona el orden correcto:",
-                    type: "single-choice",
-                    options: [
-                        "a) Wednesday, Monday, Tuesday, Thursday, Friday, Saturday, Sunday",
-                        "b) Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday",
-                        "c) Monday, Thursday, Wednesday, Tuesday, Friday, Saturday, Sunday",
-                        "d) Monday, Tuesday, Wednesday, Thursday, Friday, Sunday, Saturday"
-                    ]
-                },
-                {
-                    question: "Artículos A - AN<br>Completa la oración: 'It's ___ apple.' con el artículo correcto.",
-                    type: "multi-direct-answer",
-                    parts: [{ prompt: "It's ___ apple.", type: "text" }]
-                },
-                {
-                    question: "Pronombres Personales<br>'Nosotros' se traduce como 'We'.",
-                    type: "true-false"
-                },
-                {
-                    question: "Meses del año<br>Which of these are months of the year? (Select all that apply) / ¿Cuáles de estos son meses del año? (Selecciona todas las que apliquen):",
-                    type: "multiple-select",
-                    options: [
-                        { text: "a) January", value: "a" },
-                        { text: "b) Morning", value: "b" },
-                        { text: "c) Saturday", value: "c" },
-                        { text: "d) April", value: "d" },
-                        { text: "e) Friday", value: "e" },
-                        { text: "f) December", value: "f" },
-                        { text: "g) August", value: "g" }
-                    ]
-                },
-                {
-                    question: "Números cardinales y ordinales<br>Choose the correct ordinal numbers. / Escoge los números ordinales:",
-                    type: "multiple-select",
-                    options: [
-                        { text: "a) First", value: "a" },
-                        { text: "b) Three", value: "b" },
-                        { text: "c) Second", value: "c" },
-                        { text: "d) Twelve", "value": "d" },
-                        { text: "e) Third", value: "e" },
-                        { text: "f) Fifth", value: "f" },
-                        { text: "g) Eighteen", value: "g" }
-                    ]
-                },
-                {
-                    question: "Verbo “To be” (presente)<br>La traducción de la oración 'Ellos son mis amigos' es 'They are my friends'.",
-                    type: "true-false"
-                },
-                {
-                    question: "Números Cardinales<br>Traduce los siguientes números:",
-                    type: "multi-direct-answer",
-                    parts: [
-                        { prompt: "1. Uno", type: "text" },
-                        { prompt: "2. Dos", type: "text" },
-                        { prompt: "3. Tres", type: "text" },
-                        { prompt: "4. Cuatro", type: "text" },
-                        { prompt: "5. Cinco", type: "text" }
-                    ]
-                },
-                {
-                    question: "Artículos A - AN<br>'An' se usa antes de una palabra que comienza con una vocal.",
-                    type: "true-false"
-                },
-                {
-                    question: "Preguntas con “To be”<br>Rearrange the words to form a correct question. / Reorganiza las palabras para formar una pregunta correcta: a good student / you / are",
-                    type: "multi-direct-answer",
-                    parts: [
-                        { prompt: "1. a good student / you / are", type: "text" }
-                    ]
-                }
-            ];
-
-            const userAnswers = new Array(allQuestions.length).fill(null);
-            let currentQuestionIndex = 0;
+            // ⚠️ REEMPLAZA ESTA URL CON LA URL DE TU NUEVA IMPLEMENTACIÓN DE APPS SCRIPT
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbygvQqfGZ6zap5vRPba7OZyd24a3n-32WmdXPze4ZhJhhLnMVjI4_sW_b3fZdj77yBZ/exec';
+        
+            const QUIZ_DURATION_SECONDS = 20 * 60; // 20 minutos
             let timerInterval;
-            let startTime;
-            let isQuizActive = false;
-            let quizUserDetails = {};
-
-            const introSection = document.getElementById('introSection');
-            const startLearningBtn = document.getElementById('startLearningBtn');
-            const quizInstructionsSection = document.getElementById('quizInstructionsSection');
-            const openQuizStartModalBtn = document.getElementById('openQuizStartModalBtn');
-            const quizAppContainer = document.getElementById('quiz-app-container');
-            const quizApp = document.getElementById('quiz-app');
-            const navRegisterBtn = document.getElementById('navRegisterBtn');
-            const registerModal = document.getElementById('registerModal');
-            const closeRegisterModalBtn = document.getElementById('closeRegisterModal');
-            const quizStartModal = document.getElementById('quizStartModal');
-            const closeQuizStartModalBtn = document.getElementById('closeQuizStartModal');
-            const registrationForm = document.getElementById('registrationForm');
-            const registerMessage = document.getElementById('registerMessage');
-            const registrationSpinner = document.getElementById('registrationSpinner');
-            const registrationBtnText = document.getElementById('registrationBtnText');
-            const quizStartForm = document.getElementById('quizStartForm');
-            const quizAttemptsMessage = document.getElementById('quizAttemptsMessage');
-            const quizEmailInput = document.getElementById('quizEmail');
-            const backToHomeBtn = document.getElementById('backToHomeBtn');
-
-            function toggleModal(modalId, show) {
+            let elapsedSeconds = 0;
+            let quizStartTime;
+        
+            const quizData = [
+                { question: "Presentación y saludos (formal/informal)<br>Which of the following are informal greetings? (Select all that apply) / ¿Cuáles de las siguientes son saludos informales? (Selecciona todas las que apliquen):", options: ["a) Good morning", "b) How do you do?", "c) What’s up?", "d) Nice to meet you", "e) Hey!", "f) Goodbye", "g) What's new?"], quizType: "multiple-select" },
+                { question: "Verbo “To be” (presente)<br>Completa la oración: 'He _______ a doctor.' con la forma correcta del verbo 'to be'", options: ["a) am", "b) are", "c) is", "d) be"], quizType: "single-choice" },
+                { question: "Adjetivos Posesivos<br>Completa la oración: 'This is ___ car. (He)' con el adjetivo posesivo correcto.", quizType: "multi-direct-answer" },
+                { question: "Días de la semana<br>La traducción correcta de 'Lunes' es 'Monday'.", options: ["true", "false"], quizType: "true-false" },
+                { question: "Despedidas<br>Select the appropriate ways to say goodbye. / Selecciona las formas en que podemos despedirnos (Escoge todas las que apliquen):", options: ["a) See you later!", "b) Bye!", "c) Have a good day", "d) How are you?", "e) Good night", "f) See you tomorrow", "g) Hi"], quizType: "multiple-select" },
+                { question: "Días de la semana<br>Select the correct order. / Selecciona el orden correcto:", options: ["a) Monday, Sunday, Tuesday", "b) Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday", "c) Sunday, Tuesday, Monday"], quizType: "single-choice" },
+                { question: "Artículos A - AN<br>Completa la oración: 'It's ___ apple.' con el artículo correcto.", quizType: "multi-direct-answer" },
+                { question: "Pronombres Personales<br>'Nosotros' se traduce como 'We'.", options: ["true", "false"], quizType: "true-false" },
+                { question: "Meses del año<br>Which of these are months of the year? (Select all that apply) / ¿Cuáles de estos son meses del año? (Selecciona todas las que apliquen):", options: ["a) January", "b) Winter", "c) Spring", "d) July", "e) December", "f) Monday", "g) November"], quizType: "multiple-select" },
+                { question: "Números cardinales y ordinales<br>Choose the correct ordinal numbers. / Escoge los números ordinales:", options: ["a) First", "b) Three", "c) Third", "d) Seven", "e) Fifth", "f) Second", "g) Six"], quizType: "multiple-select" },
+                { question: "Verbo “To be” (presente)<br>La traducción de la oración 'Ellos son mis amigos' es 'They are my friends'.", options: ["true", "false"], quizType: "true-false" },
+                { question: "Números Cardinales<br>Traduce los siguientes números: 1, 2, 3, 4, 5.", quizType: "multi-direct-answer" },
+                { question: "Artículos A - AN<br>'An' se usa antes de una palabra que comienza con una vocal.", options: ["true", "false"], quizType: "true-false" },
+                { question: "Preguntas con “To be”<br>Reorganiza las palabras para formar una pregunta correcta: a good student / you / are", quizType: "multi-direct-answer" }
+            ];
+        
+            // Variables de estado
+            let currentUserEmail = '';
+            let currentUserFullName = '';
+        
+            // --- Funciones de control de la UI ---
+            function showSection(sectionId) {
+                document.querySelectorAll('section, div[id$="Modal"], div[id$="container"], #final-thanks-message').forEach(el => {
+                    if (!el.classList.contains('hidden')) {
+                        el.classList.add('hidden');
+                    }
+                });
+                document.getElementById(sectionId).classList.remove('hidden');
+            }
+        
+            function showModal(modalId) {
                 const modal = document.getElementById(modalId);
-                if (show) {
-                    modal.classList.remove('hidden');
-                    setTimeout(() => modal.classList.remove('scale-95'), 10);
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.querySelector('div').classList.remove('scale-95');
+                    modal.querySelector('div').classList.add('scale-100');
+                }, 10);
+            }
+        
+            function hideModal(modalId) {
+                const modal = document.getElementById(modalId);
+                modal.querySelector('div').classList.remove('scale-100');
+                modal.querySelector('div').classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+            
+            function setButtonLoadingState(buttonId, isLoading) {
+                const button = document.getElementById(buttonId);
+                if (button) {
+                    const textSpan = button.querySelector('span:not(.loading-spinner)');
+                    const spinnerSpan = button.querySelector('.loading-spinner');
+                    button.disabled = isLoading;
+                    if (textSpan) {
+                        textSpan.style.display = isLoading ? 'none' : 'inline';
+                    }
+                    if (spinnerSpan) {
+                        spinnerSpan.style.display = isLoading ? 'inline-block' : 'none';
+                    }
                 } else {
-                    modal.classList.add('scale-95');
-                    setTimeout(() => modal.classList.add('hidden'), 300);
+                    console.error(`Button with ID '${buttonId}' not found.`);
                 }
             }
-
-            navRegisterBtn.addEventListener('click', () => {
-                toggleModal('registerModal', true);
+            
+            // --- Funciones de manejo del Quiz ---
+            function renderQuestions() {
+                const quizApp = document.getElementById('quiz-app');
+                quizApp.innerHTML = '';
+                
+                const quizContent = document.createElement('div');
+                quizContent.innerHTML = `
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-3xl font-bold text-blue-700">Quiz de Nivelación</h2>
+                        <div id="quizTimer" class="timer-display">20:00</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div id="quizProgressBar" class="progress-bar"></div>
+                    </div>
+                    <div id="quizQuestionsContainer" class="space-y-6 mt-6"></div>
+                    <div class="flex justify-end mt-8">
+                        <button id="submitQuizBtn" class="send-button">Enviar Resultados</button>
+                    </div>
+                `;
+                quizApp.appendChild(quizContent);
+                
+                const questionsContainer = document.getElementById('quizQuestionsContainer');
+                quizData.forEach((question, index) => {
+                    const questionElement = document.createElement('div');
+                    questionElement.classList.add('quiz-question', 'p-6', 'bg-gray-50', 'rounded-lg', 'shadow-sm');
+                    let optionsHtml = '';
+                    
+                    if (question.quizType === 'multi-direct-answer') {
+                        const numInputs = question.question.includes('1, 2, 3, 4, 5') ? 5 : 1;
+                        let inputsHtml = '';
+                        if (numInputs > 1) {
+                            inputsHtml = `<div class="multi-part-question-container">`;
+                            for (let i = 0; i < numInputs; i++) {
+                                inputsHtml += `<input type="text" name="q${index}_${i}" class="direct-answer-input" placeholder="Respuesta ${i + 1}">`;
+                            }
+                            inputsHtml += `</div>`;
+                        } else {
+                            inputsHtml = `<input type="text" name="q${index}_0" class="direct-answer-input" placeholder="Escribe tu respuesta aquí...">`;
+                        }
+                        optionsHtml = inputsHtml;
+                    } else if (question.quizType === 'multiple-select') {
+                        optionsHtml = question.options.map((option, i) => `
+                            <label class="multiple-select-option">
+                                <input type="checkbox" name="q${index}" value="${String.fromCharCode(97 + i)}" class="mr-3 transform scale-125">
+                                <span class="ml-2">${option}</span>
+                            </label>
+                        `).join('');
+                    } else { // single-choice and true-false
+                        optionsHtml = question.options.map((option, i) => `
+                            <button type="button" class="option-button" data-question-index="${index}" data-value="${option.split(')')[0].toLowerCase().trim()}">
+                                ${option}
+                            </button>
+                        `).join('');
+                    }
+        
+                    questionElement.innerHTML = `
+                        <p class="font-bold text-lg mb-4 text-blue-600">${index + 1}.</p>
+                        <p class="text-base leading-relaxed mb-4">${question.question}</p>
+                        <div class="space-y-3 mt-2">${optionsHtml}</div>
+                    `;
+                    questionsContainer.appendChild(questionElement);
+                });
+        
+                // Event listeners para botones de single-choice y true-false
+                questionsContainer.querySelectorAll('.option-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        const questionIndex = button.dataset.questionIndex;
+                        const value = button.dataset.value;
+                        const questionButtons = questionsContainer.querySelectorAll(`[data-question-index="${questionIndex}"]`);
+                        questionButtons.forEach(btn => btn.classList.remove('selected'));
+                        button.classList.add('selected');
+                    });
+                });
+                
+                // Event listeners para botones de multiple-select
+                questionsContainer.querySelectorAll('.multiple-select-option').forEach(label => {
+                    label.addEventListener('click', () => {
+                        const checkbox = label.querySelector('input[type="checkbox"]');
+                        checkbox.checked = !checkbox.checked;
+                        label.classList.toggle('selected', checkbox.checked);
+                    });
+                });
+        
+                document.getElementById('submitQuizBtn').addEventListener('click', finishQuiz);
+            }
+            
+            function startQuiz() {
+                showSection('quiz-app-container');
+                renderQuestions();
+                startTimer();
+                quizStartTime = new Date();
+            }
+            
+            function startTimer() {
+                const timerDisplay = document.getElementById('quizTimer');
+                const progressBar = document.getElementById('quizProgressBar');
+                timerInterval = setInterval(() => {
+                    elapsedSeconds++;
+                    const remainingTime = QUIZ_DURATION_SECONDS - elapsedSeconds;
+        
+                    if (remainingTime <= 0) {
+                        clearInterval(timerInterval);
+                        timerDisplay.textContent = '00:00';
+                        finishQuiz();
+                        return;
+                    }
+        
+                    const minutes = Math.floor(remainingTime / 60);
+                    const seconds = remainingTime % 60;
+                    const formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    timerDisplay.textContent = formattedTime;
+        
+                    if (remainingTime <= 60) {
+                        timerDisplay.classList.add('low-time');
+                    }
+        
+                    const progressPercentage = (elapsedSeconds / QUIZ_DURATION_SECONDS) * 100;
+                    progressBar.style.width = `${progressPercentage}%`;
+                }, 1000);
+            }
+            
+            function getFormData() {
+                const userAnswers = [];
+                const quizQuestions = document.getElementById('quizQuestionsContainer').children;
+                quizData.forEach((question, index) => {
+                    const type = question.quizType;
+                    let selectedAnswer;
+        
+                    if (type === 'multiple-select') {
+                        const checkboxes = quizQuestions[index].querySelectorAll('input[type="checkbox"]:checked');
+                        selectedAnswer = Array.from(checkboxes).map(checkbox => checkbox.value);
+                    } else if (type === 'multi-direct-answer') {
+                         const inputs = quizQuestions[index].querySelectorAll('input[type="text"]');
+                         selectedAnswer = Array.from(inputs).map(input => input.value.toLowerCase().trim());
+                    } else if (type === 'single-choice' || type === 'true-false') {
+                        const selectedButton = quizQuestions[index].querySelector('.option-button.selected');
+                        selectedAnswer = selectedButton ? selectedButton.dataset.value : null;
+                    }
+                    userAnswers.push(selectedAnswer);
+                });
+                return userAnswers;
+            }
+            
+            function finishQuiz() {
+                clearInterval(timerInterval);
+                const userAnswers = getFormData();
+                const quizEndTime = new Date();
+                const responseTime = (quizEndTime - quizStartTime) / 1000;
+                
+                const submissionData = {
+                    type: 'quiz_results',
+                    fullName: currentUserFullName,
+                    email: currentUserEmail,
+                    userAnswers: userAnswers,
+                    responseTime: formatElapsedTime(responseTime)
+                };
+        
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(submissionData),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                     // Apps Script siempre devuelve un 200, la respuesta exitosa está en el cuerpo JSON
+                     return response.text();
+                })
+                .then(data => {
+                    console.log('Quiz results submitted. Server response:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                })
+                .finally(() => {
+                    // Muestra el mensaje de agradecimiento
+                    const finalMessage = document.getElementById('final-thanks-message');
+                    finalMessage.classList.remove('hidden');
+                    setTimeout(() => finalMessage.classList.add('show'), 10);
+                    
+                    // Oculta el contenedor del quiz y la barra de navegación
+                    document.getElementById('quiz-app-container').classList.add('hidden');
+                    document.getElementById('mainNav').classList.add('hidden');
+                });
+            }
+        
+            function formatElapsedTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = Math.round(seconds % 60);
+                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+        
+            // --- Funciones de manejo de Eventos de la UI ---
+            // Botones de la barra de navegación
+            document.getElementById('navLoginBtn').addEventListener('click', () => showModal('quizStartModal'));
+            document.getElementById('navRegisterBtn').addEventListener('click', () => showModal('registerModal'));
+            
+            // Botón de la sección de inicio
+            document.getElementById('startLearningBtn').addEventListener('click', () => showSection('quizInstructionsSection'));
+        
+            // Botones para abrir/cerrar modales
+            document.getElementById('openQuizStartModalBtn').addEventListener('click', () => {
+                showModal('quizStartModal');
+                document.getElementById('quizAttemptsMessage').textContent = ''; // Limpiar mensaje de intentos
             });
-
-            closeRegisterModalBtn.addEventListener('click', () => {
-                toggleModal('registerModal', false);
-            });
-
-            closeQuizStartModalBtn.addEventListener('click', () => {
-                toggleModal('quizStartModal', false);
-            });
-
-            window.addEventListener('click', (event) => {
-                if (event.target === registerModal) {
-                    toggleModal('registerModal', false);
-                }
-                if (event.target === quizStartModal) {
-                    toggleModal('quizStartModal', false);
-                }
-            });
-
-            registrationForm.addEventListener('submit', async (e) => {
+            document.getElementById('closeQuizStartModal').addEventListener('click', () => hideModal('quizStartModal'));
+            document.getElementById('closeRegisterModal').addEventListener('click', () => hideModal('registerModal'));
+        
+            // Botón para volver a inicio
+            document.getElementById('backToHomeBtn').addEventListener('click', () => window.location.reload());
+            
+            // --- Manejo de Formularios ---
+            // Formulario de Inscripción
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
                 e.preventDefault();
-                registrationBtnText.style.display = 'none';
-                registrationSpinner.style.display = 'inline-block';
-                const formData = new FormData(registrationForm);
-                const data = {
+                setButtonLoadingState('registrationBtnText', true);
+        
+                const formData = new FormData(this);
+                const submissionData = {
                     type: 'inscription',
                     nombre: formData.get('nombre'),
                     cedula: formData.get('cedula'),
                     edad: formData.get('edad'),
-                    correo: formData.get('correo')
+                    correo: formData.get('correo'),
                 };
-
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-
-                    const result = await response.json();
-                    if (result.success) {
-                        registerMessage.textContent = '¡Inscripción exitosa! Serás notificado por correo electrónico.';
-                        registerMessage.className = 'mt-4 text-center text-lg font-medium text-green-600';
-                        registerMessage.style.display = 'block';
-                        registrationForm.reset();
+        
+                fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(submissionData),
+                    headers: { 'Content-Type': 'application/json' }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const messageElement = document.getElementById('registerMessage');
+                    if (data.success) {
+                        messageElement.textContent = 'Inscripción exitosa. Revisa tu correo.';
+                        messageElement.classList.remove('text-red-500');
+                        messageElement.classList.add('text-green-500');
+                        messageElement.style.display = 'block';
+                        document.getElementById('registrationForm').reset();
                     } else {
-                        registerMessage.textContent = 'Error: ' + (result.message || 'El correo electrónico ya está registrado.');
-                        registerMessage.className = 'mt-4 text-center text-lg font-medium text-red-600';
-                        registerMessage.style.display = 'block';
+                        messageElement.textContent = data.message;
+                        messageElement.classList.remove('text-green-500');
+                        messageElement.classList.add('text-red-500');
+                        messageElement.style.display = 'block';
                     }
-                } catch (error) {
-                    console.error('Error en la solicitud de inscripción:', error);
-                    registerMessage.textContent = 'Ocurrió un error al procesar la inscripción.';
-                    registerMessage.className = 'mt-4 text-center text-lg font-medium text-red-600';
-                    registerMessage.style.display = 'block';
-                } finally {
-                    registrationSpinner.style.display = 'none';
-                    registrationBtnText.style.display = 'inline-block';
-                }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const messageElement = document.getElementById('registerMessage');
+                    messageElement.textContent = 'Ocurrió un error de red. Intenta de nuevo.';
+                    messageElement.classList.remove('text-green-500');
+                    messageElement.classList.add('text-red-500');
+                    messageElement.style.display = 'block';
+                })
+                .finally(() => {
+                    setButtonLoadingState('registrationBtnText', false);
+                });
             });
-
-            // Lógica del Quiz
-            startLearningBtn.addEventListener('click', () => {
-                introSection.classList.add('hidden');
-                quizInstructionsSection.classList.remove('hidden');
-            });
-
-            openQuizStartModalBtn.addEventListener('click', () => {
-                 toggleModal('quizStartModal', true);
-            });
-
-            quizEmailInput.addEventListener('blur', async () => {
-                const email = quizEmailInput.value;
-                if (email) {
-                    const checkAttemptsUrl = `${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`;
-                    try {
-                        const response = await fetch(checkAttemptsUrl);
-                        const result = await response.json();
-                        if (result.isRegistered === false) {
-                            quizAttemptsMessage.textContent = 'Este correo no está registrado. Por favor, inscríbete primero.';
+        
+            // Formulario de Inicio de Quiz
+            document.getElementById('quizStartForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            setButtonLoadingState('quizStartBtnText', true);
+    
+            const fullName = document.getElementById('quizNombre').value;
+            const email = document.getElementById('quizEmail').value;
+            const quizAttemptsMessage = document.getElementById('quizAttemptsMessage');
+            
+            // Almacenar el nombre y correo para el envío final
+            currentUserEmail = email;
+            currentUserFullName = fullName;
+    
+            // Verificar el estado del usuario con el script de Apps Script (doGet)
+            fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    setButtonLoadingState('quizStartBtnText', false);
+                    if (data.isRegistered === true) {
+                        if (data.attempts >= 2) {
+                            quizAttemptsMessage.textContent = 'Has alcanzado el número máximo de intentos (2).';
                             quizAttemptsMessage.classList.remove('hidden');
-                            document.getElementById('quizStartForm').querySelector('button').disabled = true;
-                        } else if (result.attempts >= 2) {
-                            quizAttemptsMessage.textContent = 'Ya has completado tus 2 intentos para esta prueba.';
-                            quizAttemptsMessage.classList.remove('hidden');
-                            document.getElementById('quizStartForm').querySelector('button').disabled = true;
                         } else {
-                            quizAttemptsMessage.classList.add('hidden');
-                            document.getElementById('quizStartForm').querySelector('button').disabled = false;
+                            hideModal('quizStartModal');
+                            showSection('quizInstructionsSection');
                         }
-                    } catch (error) {
-                        console.error('Error al verificar intentos:', error);
-                        quizAttemptsMessage.textContent = 'Error al verificar intentos. Intenta de nuevo.';
+                    } else {
+                        // Si el usuario no está registrado, se le indica
+                        quizAttemptsMessage.textContent = 'El correo electrónico no está registrado. Por favor, inscríbete para continuar.';
                         quizAttemptsMessage.classList.remove('hidden');
+                        // Puedes también redirigirlos al modal de inscripción si lo deseas:
+                        // hideModal('quizStartModal');
+                        // showModal('registerModal');
                     }
-                }
-            });
-
-            quizStartForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const formData = new FormData(quizStartForm);
-                quizUserDetails.fullName = formData.get('nombre');
-                quizUserDetails.email = formData.get('email');
-                toggleModal('quizStartModal', false);
-                startQuiz();
-            });
-
-            function startQuiz() {
-                quizInstructionsSection.classList.add('hidden');
-                quizAppContainer.classList.remove('hidden');
-                startTime = new Date();
-                isQuizActive = true;
-                renderQuestion();
-                startTimer();
-            }
-
-            function renderQuestion() {
-                if (currentQuestionIndex >= allQuestions.length) {
-                    finishQuiz();
-                    return;
-                }
-
-                const questionData = allQuestions[currentQuestionIndex];
-                let questionHtml = `
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="text-xl font-bold text-indigo-700">Ítem ${currentQuestionIndex + 1} de ${allQuestions.length}</div>
-                        <div id="quizTimer" class="timer-display">00:00</div>
-                    </div>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: ${((currentQuestionIndex + 1) / allQuestions.length) * 100}%;"></div>
-                    </div>
-                    <div class="mt-8 text-2xl font-bold text-gray-800 leading-relaxed mb-6">${questionData.question}</div>
-                `;
-
-                if (questionData.type === 'single-choice') {
-                    questionHtml += `<div id="options-container" class="space-y-4">`;
-                    questionData.options.forEach(option => {
-                        questionHtml += `<button class="option-button" data-value="${option}">${option}</button>`;
-                    });
-                    questionHtml += `</div>`;
-                } else if (questionData.type === 'multiple-select') {
-                    questionHtml += `<div id="options-container" class="space-y-4">`;
-                    questionData.options.forEach(option => {
-                        questionHtml += `
-                            <label class="multiple-select-option">
-                                <input type="checkbox" name="multiple-choice-option" value="${option.value}">
-                                <span>${option.text}</span>
-                            </label>
-                        `;
-                    });
-                    questionHtml += `</div>`;
-                } else if (questionData.type === 'true-false') {
-                    questionHtml += `<div id="options-container" class="space-y-4">`;
-                    questionHtml += `<button class="option-button" data-value="true">Verdadero</button>`;
-                    questionHtml += `<button class="option-button" data-value="false">Falso</button>`;
-                    questionHtml += `</div>`;
-                } else if (questionData.type === 'multi-direct-answer') {
-                    questionHtml += `<div id="options-container" class="multi-part-question-container">`;
-                    questionData.parts.forEach((part, index) => {
-                        questionHtml += `
-                            <div class="multi-part-question-item">
-                                <label for="answer-input-${index}">${part.prompt}</label>
-                                <input type="text" id="answer-input-${index}" class="direct-answer-input" placeholder="Escribe tu respuesta aquí...">
-                            </div>
-                        `;
-                    });
-                    questionHtml += `</div>`;
-                }
-
-                questionHtml += `
-                    <div class="flex justify-between mt-8">
-                        <button id="prevBtn" class="main-button"><i class="fas fa-arrow-left"></i> Anterior</button>
-                        <button id="nextBtn" class="main-button" disabled>Siguiente <i class="fas fa-arrow-right"></i></button>
-                    </div>
-                `;
-
-                quizApp.innerHTML = questionHtml;
-                updateButtonsState();
-
-                if (userAnswers[currentQuestionIndex] !== null) {
-                    const savedAnswer = userAnswers[currentQuestionIndex];
-                    if (questionData.type === 'single-choice' || questionData.type === 'true-false') {
-                        const buttons = quizApp.querySelectorAll('.option-button');
-                        buttons.forEach(button => {
-                            if (button.dataset.value === savedAnswer) {
-                                button.classList.add('selected');
-                            }
-                        });
-                    } else if (questionData.type === 'multiple-select') {
-                        const checkboxes = quizApp.querySelectorAll('input[type="checkbox"]');
-                        checkboxes.forEach(checkbox => {
-                            if (savedAnswer && savedAnswer.includes(checkbox.value)) {
-                                checkbox.checked = true;
-                                checkbox.closest('label').classList.add('selected');
-                            }
-                        });
-                    } else if (questionData.type === 'multi-direct-answer') {
-                        savedAnswer.forEach((answer, index) => {
-                            const input = quizApp.querySelector(`#answer-input-${index}`);
-                            if (input) {
-                                input.value = answer;
-                            }
-                        });
-                    }
-                }
-
-                const optionsContainer = document.getElementById('options-container');
-                if (questionData.type === 'single-choice' || questionData.type === 'true-false') {
-                    optionsContainer.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('option-button')) {
-                            const buttons = optionsContainer.querySelectorAll('.option-button');
-                            buttons.forEach(btn => btn.classList.remove('selected'));
-                            e.target.classList.add('selected');
-                            userAnswers[currentQuestionIndex] = e.target.dataset.value;
-                            updateButtonsState();
-                        }
-                    });
-                } else if (questionData.type === 'multiple-select') {
-                    optionsContainer.addEventListener('change', (e) => {
-                        if (e.target.type === 'checkbox') {
-                            const label = e.target.closest('label');
-                            if (e.target.checked) {
-                                label.classList.add('selected');
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    quizAttemptsMessage.textContent = 'Error al verificar el correo. Intenta de nuevo.';
+                    quizAttemptsMessage.classList.remove('hidden');
+                    setButtonLoadingState('quizStartBtnText', false);
+                });
+        });                
+                // Almacenar el nombre y correo para el envío final
+                currentUserEmail = email;
+                currentUserFullName = fullName;
+        
+                // Verificar el estado del usuario con el script de Apps Script (doGet)
+                fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.isRegistered === true) {
+                            if (data.attempts >= 2) {
+                                quizAttemptsMessage.textContent = 'Has alcanzado el número máximo de intentos (2).';
+                                quizAttemptsMessage.classList.remove('hidden');
+                                setButtonLoadingState('quizStartBtnText', false);
                             } else {
-                                label.classList.remove('selected');
+                                hideModal('quizStartModal');
+                                showSection('quizInstructionsSection');
+                                setButtonLoadingState('quizStartBtnText', false);
                             }
-                            const selectedValues = Array.from(optionsContainer.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-                            userAnswers[currentQuestionIndex] = selectedValues.length > 0 ? selectedValues : null;
-                            updateButtonsState();
+                        } else {
+                            quizAttemptsMessage.textContent = 'El correo electrónico no está registrado.';
+                            quizAttemptsMessage.classList.remove('hidden');
+                            setButtonLoadingState('quizStartBtnText', false);
                         }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        quizAttemptsMessage.textContent = 'Error al verificar el correo. Intenta de nuevo.';
+                        quizAttemptsMessage.classList.remove('hidden');
+                        setButtonLoadingState('quizStartBtnText', false);
                     });
-                } else if (questionData.type === 'multi-direct-answer') {
-                    optionsContainer.addEventListener('input', () => {
-                        const inputs = Array.from(optionsContainer.querySelectorAll('.direct-answer-input'));
-                        const allFilled = inputs.every(input => input.value.trim() !== '');
-                        userAnswers[currentQuestionIndex] = inputs.map(input => input.value);
-                        updateButtonsState();
-                    });
-                }
-
-                document.getElementById('prevBtn').addEventListener('click', () => {
-                    if (currentQuestionIndex > 0) {
-                        currentQuestionIndex--;
-                        renderQuestion();
-                    }
-                });
-
-                document.getElementById('nextBtn').addEventListener('click', () => {
-                    if (currentQuestionIndex < allQuestions.length - 1) {
-                        currentQuestionIndex++;
-                        renderQuestion();
-                    } else {
-                        finishQuiz();
-                    }
-                });
-            }
-
-            function updateButtonsState() {
-                const prevBtn = document.getElementById('prevBtn');
-                const nextBtn = document.getElementById('nextBtn');
-                const currentAnswer = userAnswers[currentQuestionIndex];
-
-                if (currentQuestionIndex === 0) {
-                    prevBtn.disabled = true;
-                } else {
-                    prevBtn.disabled = false;
-                }
-
-                const isAnswered = currentAnswer !== null && (Array.isArray(currentAnswer) ? currentAnswer.every(ans => ans.trim() !== '') : currentAnswer.trim() !== '');
-                if (isAnswered) {
-                    nextBtn.disabled = false;
-                } else {
-                    nextBtn.disabled = true;
-                }
-
-                if (currentQuestionIndex === allQuestions.length - 1) {
-                    nextBtn.innerHTML = 'Enviar Respuestas <i class="fas fa-paper-plane"></i>';
-                    if (isAnswered) {
-                        nextBtn.classList.remove('main-button');
-                        nextBtn.classList.add('send-button');
-                    } else {
-                        nextBtn.classList.add('main-button');
-                        nextBtn.classList.remove('send-button');
-                    }
-                } else {
-                    nextBtn.innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
-                    nextBtn.classList.add('main-button');
-                    nextBtn.classList.remove('send-button');
-                }
-            }
-
-            async function finishQuiz() {
-                isQuizActive = false;
-                clearInterval(timerInterval);
-                const endTime = new Date();
-                const elapsedTimeInSeconds = Math.floor((endTime - startTime) / 1000);
-
-                const data = {
-                    type: 'quiz_results',
-                    fullName: quizUserDetails.fullName,
-                    email: quizUserDetails.email,
-                    responseTime: formatElapsedTime(elapsedTimeInSeconds),
-                    userAnswers: userAnswers
-                };
-
-                try {
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-                    if (result.success) {
-                        document.getElementById('quiz-app-container').classList.add('hidden');
-                        const finalMessage = document.getElementById('final-thanks-message');
-                        finalMessage.classList.remove('hidden');
-                        setTimeout(() => finalMessage.classList.add('show'), 100);
-                    } else {
-                        alert('Error al enviar los resultados: ' + result.message);
-                    }
-                } catch (error) {
-                    console.error('Error al enviar los resultados:', error);
-                    alert('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
-                }
-            }
-
-            function startTimer() {
-                const timerDisplay = document.getElementById('quizTimer');
-                let seconds = 0;
-                timerInterval = setInterval(() => {
-                    seconds++;
-                    const minutes = Math.floor((QUIZ_DURATION_SECONDS - seconds) / 60);
-                    const remainingSeconds = (QUIZ_DURATION_SECONDS - seconds) % 60;
-                    const formattedTime = `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-                    timerDisplay.textContent = formattedTime;
-
-                    if (QUIZ_DURATION_SECONDS - seconds <= 60) {
-                        timerDisplay.classList.add('low-time');
-                    }
-                    if (seconds >= QUIZ_DURATION_SECONDS) {
-                        finishQuiz();
-                        clearInterval(timerInterval);
-                    }
-                }, 1000);
-            }
-
-            function formatElapsedTime(seconds) {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
-                return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-            }
-
-            backToHomeBtn.addEventListener('click', () => {
-                window.location.reload();
             });
         });
     </script>
 </body>
 </html>
-
