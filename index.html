@@ -721,46 +721,13 @@
         
             // Formulario de Inicio de Quiz
             document.getElementById('quizStartForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            setButtonLoadingState('quizStartBtnText', true);
-    
-            const fullName = document.getElementById('quizNombre').value;
-            const email = document.getElementById('quizEmail').value;
-            const quizAttemptsMessage = document.getElementById('quizAttemptsMessage');
-            
-            // Almacenar el nombre y correo para el envío final
-            currentUserEmail = email;
-            currentUserFullName = fullName;
-    
-            // Verificar el estado del usuario con el script de Apps Script (doGet)
-            fetch(`${APPS_SCRIPT_URL}?email=${encodeURIComponent(email)}`)
-                .then(response => response.json())
-                .then(data => {
-                    setButtonLoadingState('quizStartBtnText', false);
-                    if (data.isRegistered === true) {
-                        if (data.attempts >= 2) {
-                            quizAttemptsMessage.textContent = 'Has alcanzado el número máximo de intentos (2).';
-                            quizAttemptsMessage.classList.remove('hidden');
-                        } else {
-                            hideModal('quizStartModal');
-                            showSection('quizInstructionsSection');
-                        }
-                    } else {
-                        // Si el usuario no está registrado, se le indica
-                        quizAttemptsMessage.textContent = 'El correo electrónico no está registrado. Por favor, inscríbete para continuar.';
-                        quizAttemptsMessage.classList.remove('hidden');
-                        // Puedes también redirigirlos al modal de inscripción si lo deseas:
-                        // hideModal('quizStartModal');
-                        // showModal('registerModal');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    quizAttemptsMessage.textContent = 'Error al verificar el correo. Intenta de nuevo.';
-                    quizAttemptsMessage.classList.remove('hidden');
-                    setButtonLoadingState('quizStartBtnText', false);
-                });
-        });                
+                e.preventDefault();
+                setButtonLoadingState('quizStartBtnText', true);
+        
+                const fullName = document.getElementById('quizNombre').value;
+                const email = document.getElementById('quizEmail').value;
+                const quizAttemptsMessage = document.getElementById('quizAttemptsMessage');
+                
                 // Almacenar el nombre y correo para el envío final
                 currentUserEmail = email;
                 currentUserFullName = fullName;
@@ -796,4 +763,3 @@
     </script>
 </body>
 </html>
-
