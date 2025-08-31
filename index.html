@@ -3,723 +3,624 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aprende con Douglas</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Guía de Estudio y Evaluación Avanzada de Inglés</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Estilos personalizados para el scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        ::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
+        .section-title {
+            font-size: clamp(1.5rem, 5vw, 2.25rem);
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            text-align: center;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .section-subtitle {
+            font-size: clamp(1.25rem, 4vw, 1.5rem);
+            font-weight: 600;
+            color: #374151;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
-        .no-scrollbar::-webkit-scrollbar {
+        .study-guide-content p, .study-guide-content ul {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .study-guide-content ul {
+            padding-left: 1.5rem;
+            list-style-type: disc;
+        }
+        .question-card {
+            background-color: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        .question-text {
+            font-size: clamp(1rem, 3vw, 1.125rem);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .feedback {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            color: #ffffff;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .feedback.correct { background-color: #10b981; }
+        .feedback.incorrect { background-color: #ef4444; }
+        .feedback.show { opacity: 1; }
+        .option, .navigation-button, .start-button, .restart-button, .explanation-button {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .option {
+            background-color: white;
+            border: 1px solid #d1d5db;
+        }
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .option.selected {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+        }
+        .option.correct {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        .option.incorrect {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .navigation-button {
+            background-color: #4b5563;
+            color: white;
+            font-weight: 500;
+        }
+        .navigation-button:hover:not(:disabled) {
+            background-color: #1f2937;
+        }
+        .navigation-button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+        .start-button, .restart-button {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .start-button:hover, .restart-button:hover {
+            background-color: #1d4ed8;
+        }
+        .explanation-button {
+            background-color: #4f46e5;
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s;
+        }
+        .explanation-button:hover {
+            background-color: #4338ca;
+        }
+        .explanation-section {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background-color: #eef2ff;
+            border-radius: 0.75rem;
+            border: 1px solid #c7d2fe;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        #quiz-section.hidden, #study-guide.hidden, #start-button-container.hidden {
             display: none;
         }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .prose a {
-            color: #2b6cb0;
-            text-decoration: underline;
-        }
-        .prose a:hover {
-            color: #1e4b85;
-        }
-        /* Estilos del Quiz */
-        .option-button {
-            display: block;
-            width: 100%;
-            padding: 1.1rem 1.5rem;
-            margin-bottom: 0.75rem;
-            text-align: left;
-            border: 2px solid #e0e7ee;
-            border-radius: 0.75rem;
-            background-color: #ffffff;
-            color: #3f4a5a;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-        .option-button:hover {
-            background-color: #e6f2ff;
-            border-color: #6366f1;
-            color: #4338ca;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2);
-        }
-        .option-button.selected {
-            background-color: #c7d2fe;
-            border-color: #4338ca;
-            color: #312e81;
-            box-shadow: 0 2px 8px rgba(67, 56, 202, 0.2);
-        }
-        .multiple-select-option {
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 1.1rem 1.5rem;
-            margin-bottom: 0.75rem;
-            border: 2px solid #e0e7ee;
-            border-radius: 0.75rem;
-            background-color: #ffffff;
-            color: #3f4a5a;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
-        }
-        .multiple-select-option:hover {
-            background-color: #e6f2ff;
-            border-color: #6366f1;
-            color: #4338ca;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(99, 102, 241, 0.2);
-        }
-        .multiple-select-option.selected {
-            background-color: #c7d2fe;
-            border-color: #4338ca;
-            color: #312e81;
-            box-shadow: 0 2px 8px rgba(67, 56, 202, 0.2);
-        }
-        .multiple-select-option input[type="checkbox"] {
-            margin-right: 1rem;
-            transform: scale(1.5);
-            accent-color: #6366f1;
-        }
-        .main-button, .send-button {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-        }
-        .main-button {
-            background-image: linear-gradient(to right, #6366f1, #4338ca);
-            color: white;
-        }
-        .main-button:hover {
-            background-image: linear-gradient(to right, #4338ca, #312e81);
-            transform: translateY(-4px);
-        }
-        .main-button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .main-button:disabled, .send-button:disabled {
-            background-image: linear-gradient(to right, #cbd5e1, #94a3b8);
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        .send-button {
-            background-image: linear-gradient(to right, #10b981, #059669);
-            color: white;
-        }
-        .send-button:hover {
-            background-image: linear-gradient(to right, #059669, #047857);
-            transform: translateY(-4px);
-        }
-        .send-button:active {
-            transform: translateY(0);
-            box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .progress-bar-container {
-            width: 100%;
-            background-color: #e2e8f0;
-            border-radius: 9999px;
-            height: 12px;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-        .progress-bar {
-            height: 100%;
-            background-color: #6366f1;
-            width: 0%;
-            border-radius: 9999px;
-            transition: width 0.3s ease-out;
-        }
-        .direct-answer-input {
-            width: 100%;
-            padding: 1.1rem 1.5rem;
-            border: 2px solid #e0e7ee;
-            border-radius: 0.75rem;
-            font-size: 1.1rem;
-            color: #3f4a5a;
-        }
-        .direct-answer-input:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
+        #results-summary {
+            background-color: #e5e7eb;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            margin-top: 2rem;
+            animation: fadeIn 1s ease-in-out;
         }
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #6366f1;
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #4f46e5;
             border-radius: 50%;
             width: 24px;
             height: 24px;
             animation: spin 1s linear infinite;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 0.5rem;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        #final-thanks-message, #registration-success-message {
-            text-align: center;
-            font-size: 2.8rem;
-            font-weight: 800;
-            color: #4338ca;
-            margin-top: 60px;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 1s ease-out, transform 1s ease-out;
-            line-height: 1.3;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 1000;
-            background-color: #ffffff;
-            padding: 3rem;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            max-width: 600px;
-            width: 90%;
-        }
-        #final-thanks-message.show, #registration-success-message.show {
-            opacity: 1;
-            transform: translate(-50%, -50%);
-        }
-        .timer-display {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #3f4a5a;
-            background-color: #e6f2ff;
-            padding: 0.5rem 1rem;
-            border-radius: 0.75rem;
-            margin-left: auto;
-            min-width: 120px;
-            text-align: center;
-        }
-        .timer-display.low-time {
-            color: #dc2626;
-            background-color: #fee2e2;
-        }
-        .multi-part-question-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .multi-part-question-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .multi-part-question-item label {
-            font-weight: 600;
-            color: #4a5568;
-        }
-        .module-selection-card {
-            background-color: #f0f4f8;
-            border-radius: 1rem;
-            padding: 2rem;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        .module-selection-card select {
-            width: 100%;
-            padding: 1rem;
-            font-size: 1.1rem;
-            border-radius: 0.75rem;
-            border: 2px solid #e0e7ee;
-            background-color: #ffffff;
-            color: #3f4a5a;
-        }
-        .module-selection-card select:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
-        }
-        .attempts-counter {
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-        .disabled-module-link {
-            opacity: 0.5;
-            pointer-events: none;
-            cursor: not-allowed;
-            filter: grayscale(100%);
-        }
-        @media (max-width: 768px) {
-            .option-button, .multiple-select-option {
-                font-size: 1rem;
-                padding: 0.8rem 1rem;
-            }
-            .main-button, .send-button {
-                font-size: 1rem;
-                padding: 0.8rem 1.5rem;
-            }
-            #introSection h1 {
-                font-size: 2.5rem;
-            }
-            #introSection p {
-                font-size: 1.1rem;
-            }
-            .prose h4 {
-                font-size: 1.25rem;
-            }
-            #navButtons {
-                flex-direction: column;
-                align-items: center;
-                width: 100%;
-            }
-            #navButtons button {
-                width: 100%;
-                margin-top: 0.5rem;
-            }
-            #mainNav .container {
-                flex-direction: column;
-                text-align: center;
-            }
-            #mainNav a {
-                margin-bottom: 1rem;
-            }
-            #quizStartModal > div, #loginModal > div, #registerModal > div {
-                width: 95%;
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-            #final-thanks-message, #registration-success-message {
-                font-size: 1.5rem;
-                padding: 2rem;
-            }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* Responsive design for a better mobile experience */
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            .section-title { margin-bottom: 1rem; }
+            .section-subtitle { margin-top: 1rem; }
+            .question-card { padding: 1rem; }
+            .question-text { font-size: 1rem; }
+            .flex.flex-col.md\:flex-row { flex-direction: column; }
+            .md\:space-x-4 { space-x: 0; }
         }
     </style>
 </head>
-<body class="bg-gray-100 font-sans antialiased text-gray-800">
+<body class="bg-gray-100 p-4 sm:p-8">
+    <div class="container">
+        <!-- Título principal -->
+        <div class="flex flex-col items-center">
+            <h1 class="section-title">Guía de Estudio y Evaluación Avanzada de Inglés</h1>
+        </div>
 
-    <nav id="mainNav" class="bg-gradient-to-r from-blue-600 to-blue-800 p-4 shadow-lg">
-        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-            <a href="#" id="homeTitleBtn" class="text-white text-3xl font-bold tracking-wide mb-4 sm:mb-0">Aprendiendo Inglés con Douglas</a>
-            <div id="navButtons" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
-                <button id="navLoginBtn" class="bg-white text-blue-800 py-2 px-6 rounded-full font-semibold hover:bg-gray-200 transition duration-300 shadow-md">Iniciar Sesión</button>
-                <button id="navRegisterBtn" class="bg-green-500 text-white py-2 px-6 rounded-full font-semibold hover:bg-green-600 transition duration-300 shadow-md">Inscribirse</button>
+        <!-- Sección de Guía de Estudio -->
+        <div id="study-guide" class="study-guide-content mt-8">
+            <h2 class="section-subtitle">Guía de Estudio: Gramática Básica en Inglés</h2>
+            <p>Esta guía de estudio repasa los conceptos clave de gramática inglesa del Módulo 2 para que fortalezcas tu comprensión.</p>
+            <h3 class="text-xl font-bold mt-4 mb-2">Temas principales:</h3>
+            <ul class="list-disc ml-6">
+                <li>Adjetivos posesivos y pronombres de objeto</li>
+                <li>Pronombres demostrativos</li>
+                <li>Adjetivos y su posición en la oración</li>
+                <li>Presente simple</li>
+                <li>There is / There are</li>
+            </ul>
+
+            <h3 class="section-subtitle">1. Adjetivos Posesivos y Pronombres de Objeto</h3>
+            <p>Indican a quién pertenece algo o quién recibe la acción.</p>
+            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
+                <p><strong class="font-bold">Ejemplos:</strong></p>
+                <ul class="list-disc ml-6">
+                    <li>This is **my** book. (Adjetivo posesivo)</li>
+                    <li>He is talking to **me**. (Pronombre de objeto)</li>
+                    <li>That is **their** house. (Adjetivo posesivo)</li>
+                    <li>I am giving the gift to **him**. (Pronombre de objeto)</li>
+                    <li>She is washing **her** hands. (Adjetivo posesivo)</li>
+                    <li>Can you help **us**? (Pronombre de objeto)</li>
+                    <li>**Our** teacher is nice. (Adjetivo posesivo)</li>
+                    <li>He is calling **them**. (Pronombre de objeto)</li>
+                </ul>
+            </div>
+            
+            <h3 class="section-subtitle">2. Pronombres Demostrativos</h3>
+            <p>Señalan objetos o personas, indicando si están cerca o lejos y si son singulares o plurales.</p>
+            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
+                <p><strong class="font-bold">Ejemplos:</strong></p>
+                <ul class="list-disc ml-6">
+                    <li>**This** is a cat. (cerca, singular)</li>
+                    <li>**That** is a dog. (lejos, singular)</li>
+                    <li>**These** are my keys. (cerca, plural)</li>
+                    <li>**Those** are your friends. (lejos, plural)</li>
+                    <li>**This** car is fast. (cerca, singular)</li>
+                    <li>**That** building is tall. (lejos, singular)</li>
+                    <li>**These** books are mine. (cerca, plural)</li>
+                    <li>**Those** trees are old. (lejos, plural)</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">3. Adjetivos y su posición</h3>
+            <p>En inglés, los adjetivos se colocan **siempre** antes del sustantivo que describen.</p>
+            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
+                <p><strong class="font-bold">Ejemplos:</strong></p>
+                <ul class="list-disc ml-6">
+                    <li>It's a **big** car. (Correcto)</li>
+                    <li>He is a **funny** person. (Correcto)</li>
+                    <li>She has **beautiful** hair. (Correcto)</li>
+                    <li>They live in a **new** house. (Correcto)</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">4. Presente Simple</h3>
+            <p>Para expresar hábitos o rutinas. Recuerda la regla de la tercera persona del singular (He, She, It): añade **-s** al verbo.</p>
+            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
+                <p><strong class="font-bold">Ejemplos:</strong></p>
+                <ul class="list-disc ml-6">
+                    <li>She **studies** for the exam.</li>
+                    <li>He **plays** the guitar.</li>
+                    <li>It **rains** a lot here.</li>
+                    <li>They **work** every day.</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">5. There is / There are</h3>
+            <p>Indican la existencia de algo. **`There is`** para singular y **`There are`** para plural.</p>
+            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
+                <p><strong class="font-bold">Ejemplos:</strong></p>
+                <ul class="list-disc ml-6">
+                    <li>**There is** a cat in the box.</li>
+                    <li>**There are** two cats in the box.</li>
+                    <li>**Is there** any milk?</li>
+                    <li>**Are there** any pencils?</li>
+                </ul>
+            </div>
+            <div id="start-button-container" class="mt-8 flex justify-center">
+                <button id="startButton" class="start-button">
+                    Ir a la Evaluación
+                </button>
             </div>
         </div>
-    </nav>
 
-    <div id="mainContent">
-        <section id="introSection" class="relative bg-gradient-to-br from-blue-500 to-indigo-600 text-white py-12 md:py-20 px-4 text-center shadow-inner min-h-screen flex items-center">
-            <div class="absolute inset-0 bg-white opacity-30"></div>
-            <div class="relative z-10 container mx-auto">
-                <h1 class="text-4xl font-extrabold text-white-700 mb-6 animate-pulse">¡Te damos la bienvenida al Aula Virtual!</h1>
-                <p style="text-align: justify;"><strong>¡Esta aula virtual ha sido diseñada pensando en ti!</strong>, con un enfoque visual, moderno y dinámico que te permitirá <strong> aprender inglés básico a tu propio ritmo</strong>, asegurando que hayas comprendido los conceptos antes de seguir adelante.</p> <br>
-            <p style="text-align: justify;">Hemos organizado cada contenido por temas de forma estratégica para un aprendizaje óptimo, con <strong>explicaciones y ejemplos prácticos</strong>, los cuales están acompañados de <strong>recursos pedagógicos</strong> que complementan cada uno de los temas de estudio, a través de:documentos,videos y audios. <strong>La evaluación es realizada por tema</strong>, a través de un Cuestionario en Línea, al finalizar cada evaluación <strong>recibirás un correo</strong> con tus resultados y el feedback correspondiente.</p><br>
-            <p style="text-align: justify;">
-                ¿Listo para comenzar este emocionante reto para dominar el inglés? En "Aprendiendo Inglés con Douglas", te ofrecemos las herramientas necesarias para que aprendas a comunicarte a través de la lengua inglesa, con contenido interactivo, evaluaciones constantes y el apoyo indispensable del personal docente.
-              </p><p class="text-lg text-white-700 leading-relaxed mb-8">
-                </p>
-                <pstyle="text-align: justify;>¡Ten presente tu progreso depende de tu dominio!<br><strong> ¡Esperamos que disfrutes de tu experiencia en "Aprendiendo Inglés con Douglas!</strong></p><br>
-            <p>¿Estás listo para comenzar tu primera evaluación?</p><br>
-
-                        <button id="startLearningBtn" class="bg-yellow-400 text-blue-900 py-4 px-10 rounded-full text-xl font-bold uppercase hover:bg-yellow-500 transition duration-300 transform hover:scale-105 shadow-lg">Pon a prueba tus conocimientos</button>
+        <!-- Sección de Evaluación -->
+        <div id="quiz-section" class="hidden">
+            <h2 class="section-subtitle text-center">Evaluación</h2>
+            <p class="text-center text-gray-600 mb-6">Responde las siguientes 50 preguntas. Usa los botones para navegar.</p>
+            <div id="questions-container"></div>
+            
+            <!-- Botones de navegación -->
+            <div class="flex justify-between mt-8">
+                <button id="prevButton" class="navigation-button py-2 px-4 rounded-full" disabled>
+                    Atrás
+                </button>
+                <button id="nextButton" class="navigation-button py-2 px-4 rounded-full" disabled>
+                    Siguiente
+                </button>
             </div>
-        </section>
-
-        <section id="quizInstructionsSection" class="container mx-auto mt-8 p-4 md:p-8 hidden">
-            <div class="bg-white p-8 rounded-lg shadow-lg">
-                <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Instrucciones de la Prueba</h2>
-                <div class="prose max-w-none text-gray-700">
-                    <p class="text-lg">¡Bienvenido al quiz de inglés! A continuación, se detallan las reglas para completar la prueba:</p>
-                    <ul class="list-disc list-inside space-y-2">
-                        <li>La prueba tiene una duración máxima de **20 minutos**.</li>
-                        <li>Una vez iniciada la prueba, el tiempo no se detiene.</li>
-                        <li>Debes responder todas las preguntas para poder avanzar.</li>
-                        <li>En las preguntas de selección múltiple, se te dará una puntuación parcial por cada respuesta correcta.</li>
-                        <li>Solo tienes un máximo de **2 intentos** para presentar la prueba.</li>
-                        <li>Los resultados te serán enviados por correo electrónico.</li>
-                    </ul>
-                    <p class="text-lg font-bold mt-4">¡Mucho éxito!</p>
-                </div>
-                <div class="flex justify-center mt-8">
-                    <button id="openQuizStartModalBtn" class="main-button">Comenzar</button>
-                </div>
+            
+            <div id="results-summary" class="hidden"></div>
+            <div id="restartButtonWrapper" class="hidden mt-4 flex flex-col items-center">
+                <button id="restartButton" class="restart-button">
+                    Volver a la Guía
+                </button>
             </div>
-        </section>
-
-        <div id="quiz-app-container" class="container mx-auto mt-8 p-4 md:p-8 hidden">
-            <div id="quiz-app" class="bg-white p-8 rounded-lg shadow-lg"></div>
-        </div>
-
-        <section id="virtualClassroomSection" class="container mx-auto mt-8 p-4 md:p-8 hidden">
-            <div class="bg-white p-8 rounded-lg shadow-lg">
-                <div class="flex flex-col md:flex-row gap-8">
-                    <aside class="w-full md:w-1/4">
-                        <h3 class="text-2xl font-bold text-blue-700 mb-4 md:mb-0">Temas Aula Virtual</h3>
-                        <ul id="topic-list" class="flex md:flex-col overflow-x-auto md:overflow-visible no-scrollbar space-x-2 md:space-x-0 space-y-0 md:space-y-2 pb-2"></ul>
-                    </aside>
-                    <main class="w-full md:w-3/4" id="topic-content">
-                        <h2 class="text-3xl font-bold text-gray-700 mb-4">Selecciona un tema del menú para comenzar a aprender.</h2>
-                        <p class="text-lg text-gray-600">Lee con detenimiento, copia en tu cuaderno y refuerza tu aprendizaje con los recursos pedagógicos dispuestos para tal fin, antes de presentar la evaluación.</p>
-                    </main>
-                </div>
-            </div>
-        </section>
-
-    </div>
-
-    <div id="quizStartModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-2/3 lg:w-1/2 relative transform scale-95 transition-transform duration-300 ease-out">
-            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold" id="closeQuizStartModal">&times;</button>
-            <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Comenzar la Prueba</h2>
-            <form id="quizStartForm" class="space-y-5">
-                <div>
-                    <label for="quizNombre" class="block text-gray-700 text-lg font-medium mb-2">Nombre Completo:</label>
-                    <input type="text" id="quizNombre" name="nombre" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <div>
-                    <label for="quizEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                    <input type="email" id="quizEmail" name="email" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <button type="submit" class="w-full main-button mt-6">
-                    <span id="quizStartBtnText">Iniciar Prueba</span>
-                    <span id="quizStartSpinner" class="loading-spinner" style="display:none;"></span>
-                </button>
-                <p id="quizAttemptsMessage" class="text-red-500 text-center mt-4 hidden"></p>
-            </form>
         </div>
     </div>
 
-    <div id="loginModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-2/3 lg:w-1/2 relative transform scale-95 transition-transform duration-300 ease-out">
-            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold" id="closeLoginModal">&times;</button>
-            <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Iniciar Sesión</h2>
-            <form id="loginForm" class="space-y-5">
-                <div>
-                    <label for="loginEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                    <input type="email" id="loginEmail" name="email" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <div>
-                    <label for="loginPassword" class="block text-gray-700 text-lg font-medium mb-2">Contraseña:</label>
-                    <input type="password" id="loginPassword" name="password" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <button type="submit" class="w-full main-button mt-6">
-                    <span id="loginBtnText">Entrar</span>
-                    <span id="loginSpinner" class="loading-spinner" style="display:none;"></span>
-                </button>
-                <div id="loginMessage" class="text-center text-red-500 mt-4 font-medium" style="display:none;"></div>
-                <button type="button" id="forgotPasswordBtn" class="w-full text-sm text-blue-500 hover:underline mt-4">¿Olvidaste tu contraseña?</button>
-            </form>
-        </div>
-    </div>
+    <script>
+        const studyGuide = document.getElementById('study-guide');
+        const quizSection = document.getElementById('quiz-section');
+        const startButton = document.getElementById('startButton');
+        const questionsContainer = document.getElementById('questions-container');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const resultsSummary = document.getElementById('results-summary');
+        const restartButton = document.getElementById('restartButton');
+        const restartButtonWrapper = document.getElementById('restartButtonWrapper');
+        const startButtonContainer = document.getElementById('start-button-container');
 
-    <div id="registerModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-2/3 lg:w-1/2 relative transform scale-95 transition-transform duration-300 ease-out">
-            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold" id="closeRegisterModal">&times;</button>
-            <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Formulario de Inscripción Formal</h2>
-            <form id="registrationForm" class="space-y-5">
-                <div>
-                    <label for="regNombre" class="block text-gray-700 text-lg font-medium mb-2">Nombre Completo:</label>
-                    <input type="text" id="regNombre" name="nombre" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <div>
-                    <label for="regEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                    <input type="email" id="regEmail" name="email" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <button type="submit" class="w-full main-button mt-6">
-                    <span id="registerBtnText">Inscribirse</span>
-                    <span id="registerSpinner" class="loading-spinner" style="display:none;"></span>
-                </button>
-                <div id="registrationMessage" class="text-center text-red-500 mt-4 font-medium" style="display:none;"></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="forgotPasswordModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
-        <div class="bg-white rounded-lg shadow-xl p-8 w-11/12 md:w-2/3 lg:w-1/2 relative transform scale-95 transition-transform duration-300 ease-out">
-            <button class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 text-3xl font-bold" id="closeForgotPasswordModal">&times;</button>
-            <h2 class="text-3xl font-bold text-center mb-6 text-blue-700">Restablecer Contraseña</h2>
-            <form id="forgotPasswordForm" class="space-y-5">
-                <div>
-                    <label for="forgotEmail" class="block text-gray-700 text-lg font-medium mb-2">Correo Electrónico:</label>
-                    <input type="email" id="forgotEmail" name="email" class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" required>
-                </div>
-                <button type="submit" class="w-full main-button mt-6">
-                    <span id="forgotBtnText">Enviar Enlace</span>
-                    <span id="forgotSpinner" class="loading-spinner" style="display:none;"></span>
-                </button>
-                <div id="forgotMessage" class="text-center text-red-500 mt-4 font-medium" style="display:none;"></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="registration-success-message" class="hidden">
-        <p>¡Gracias por tu inscripción!</p>
-        <p class="text-lg font-normal text-gray-600 mt-4">Tus credenciales de acceso serán enviadas a tu correo una vez que tu cuenta sea aprobada.</p>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-
-    <!-- Importaciones de Firebase como módulos -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js';
-        import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js';
-        import { getFirestore, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js';
-    
-        // ---
-        // Configuración de la aplicación
-        // ---
-        // ** INSTRUCCIÓN IMPORTANTE: Reemplaza la siguiente URL con la de tu Apps Script. **
-        // Asegúrate de que tu `index.html` esté siendo servido por un servidor web local
-        // (por ejemplo, con Live Server en VS Code) para evitar errores de CORS.
-        const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyFrP68oof1EOykYykmC2R4ueYHfJm69EWmHEN5XYpB9RqfUSKN72IWXyvmAruDlp1q/exec'; 
-        
-        console.log('URL de la API en uso:', APPS_SCRIPT_URL);
-        
-        const SENDER_EMAILJS = "service_4f5s9f9"; 
-        const SENDER_EMAILJS_TEMPLATEID = "template_7j8b3l5"; 
-        const SENDER_EMAILJS_ADMIN = "template_2b9c7d4"; 
-
-        let userScore = 0;
-        let quizAttempts = {};
-        const MAX_ATTEMPTS = 2;
-        let quizData = [];
-        let currentQuiz = {};
         let currentQuestionIndex = 0;
-        let timer;
-        let timeLeft = 1200; // 20 minutos
-        let selectedOptions = new Set();
-        let currentUserEmail = '';
-        let currentUserFullName = '';
-    
-        // ---
-        // Inicialización de Firebase
-        // ---
-        const firebaseConfig = {
-            apiKey: "AIzaSyDjl1A1gyVxtmxBy5t3boD5Zg39cz3OruQ",
-            authDomain: "aprendiendo-ingles-con-douglas.firebaseapp.com",
-            projectId: "aprendiendo-ingles-con-douglas",
-            storageBucket: "aprendiendo-ingles-con-douglas.firebasestorage.app",
-            messagingSenderId: "731161369311",
-            appId: "1:731161369311:web:c15c6cde4883967f60a76a"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-    
-        // ---
-        // Funciones de utilidad
-        // ---
-        function showModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.querySelector('div').classList.remove('scale-95');
-            }, 10);
-        }
+        let userAnswers = {};
+        let correctAnswers = 0;
 
-        function hideModal(modalId) {
-            const modal = document.getElementById(modalId);
-            modal.querySelector('div').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        }
+        const allQuestions = [
+            // Adjetivos Posesivos y Pronombres de Objeto (10 items)
+            { type: 'multiple_choice', question: "Completa la frase: 'This is my sister. ______ name is Ana.'", options: ["His", "Her", "Its", "Your"], answer: "Her" },
+            { type: 'true_false', question: "'I am helping he' es correcto.", answer: false },
+            { type: 'fill_in_the_blank', question: "Completa: 'They are calling ______.'", answer: "us" },
+            { type: 'multiple_choice', question: "Completa la frase: 'We live in Canada. ______ house is in Toronto.'", options: ["Their", "Our", "My", "Her"], answer: "Our" },
+            { type: 'true_false', question: "'She is talking to them' es una oración correcta.", answer: true },
+            { type: 'fill_in_the_blank', question: "Completa: 'Can you give the book to ______? (Pedro)'", answer: "him" },
+            { type: 'multiple_choice', question: "Completa la frase: 'The dog is wagging ______ tail.'", options: ["his", "her", "its", "their"], answer: "its" },
+            { type: 'true_false', question: "'Please come with I' es una oración correcta.", answer: false },
+            { type: 'fill_in_the_blank', question: "Completa: 'This is not my book. It is ______.' (you)", answer: "yours" },
+            { type: 'multiple_choice', question: "Completa la frase: 'Ana and Tom have a new car. ______ car is very fast.'", options: ["Her", "His", "Their", "Our"], answer: "Their" },
+            
+            // Pronombres Demostrativos (10 items)
+            { type: 'multiple_choice', question: "______ are my shoes. (cerca, plural)", options: ["This", "These", "That", "Those"], answer: "These" },
+            { type: 'true_false', question: "'That' se usa para un objeto singular que está cerca.", answer: false },
+            { type: 'fill_in_the_blank', question: "Completa: '______ is my brother.' (cerca, singular)", answer: "This" },
+            { type: 'multiple_choice', question: "______ are my pens. (lejos, plural)", options: ["This", "These", "That", "Those"], answer: "Those" },
+            { type: 'true_false', question: "'This' se usa para un objeto plural que está cerca.", answer: false },
+            { type: 'fill_in_the_blank', question: "Completa: '______ is a big mountain.' (lejos, singular)", answer: "That" },
+            { type: 'multiple_choice', question: "Selecciona el pronombre correcto: '______ books on the table are mine.' (cerca, plural)", options: ["Those", "This", "These", "That"], answer: "These" },
+            { type: 'true_false', question: "'Those' se usa para referirse a algo que está lejos y en plural.", answer: true },
+            { type: 'fill_in_the_blank', question: "Completa: 'Can you see ______ house over there?' (lejos, singular)", answer: "that" },
+            { type: 'multiple_choice', question: "Selecciona el pronombre correcto: 'I love ______ cat. (cerca, singular)", options: ["This", "That", "These", "Those"], answer: "This" },
 
-        function setButtonLoadingState(buttonTextId, isLoading) {
-            const btnText = document.getElementById(buttonTextId);
-            const spinner = btnText.nextElementSibling;
-            if (isLoading) {
-                btnText.textContent = '';
-                spinner.style.display = 'inline-block';
-                btnText.parentElement.disabled = true;
-            } else {
-                btnText.textContent = btnTextId.includes('login') ? 'Entrar' : 'Inscribirse';
-                spinner.style.display = 'none';
-                btnText.parentElement.disabled = false;
-            }
-        }
+            // Adjetivos y su posición (10 items)
+            { type: 'multiple_choice', question: "Traduce al inglés: 'Es una casa grande.'", options: ["It's a house big", "It's a big house", "A big house is it", "A house is big"], answer: "It's a big house" },
+            { type: 'true_false', question: "La frase 'He is a tall man' es gramaticalmente correcta.", answer: true },
+            { type: 'fill_in_the_blank', question: "Ordena las palabras: 'car / new / a / I / have'", answer: "I have a new car" },
+            { type: 'multiple_choice', question: "Selecciona la oración correcta:", options: ["She has hair long", "She has long hair", "Long hair she has", "Hair long she has"], answer: "She has long hair" },
+            { type: 'true_false', question: "En inglés, el adjetivo se coloca después del sustantivo.", answer: false },
+            { type: 'fill_in_the_blank', question: "Traduce: 'Ella tiene un perro pequeño.'", answer: "She has a small dog" },
+            { type: 'multiple_choice', question: "Traduce: 'El es un chico inteligente.'", options: ["He is a smart boy", "He is a boy smart", "A smart boy he is", "He is smart boy"], answer: "He is a smart boy" },
+            { type: 'true_false', question: "La frase 'The dog is black' es incorrecta.", answer: false },
+            { type: 'fill_in_the_blank', question: "Ordena las palabras: 'nice / is / a / He / person'", answer: "He is a nice person" },
+            { type: 'multiple_choice', question: "Selecciona la oración correcta:", options: ["My shirt is blue", "My shirt blue is", "Blue my shirt is", "Blue is my shirt"], answer: "My shirt is blue" },
+
+            // Presente Simple (10 items)
+            { type: 'multiple_choice', question: "Completa: 'She usually ______ to the park.'", options: ["go", "goes", "going", "gone"], answer: "goes" },
+            { type: 'true_false', question: "'They works in the office' es una oración correcta.", answer: false },
+            { type: 'fill_in_the_blank', question: "Completa: 'I ______ coffee every morning.'", answer: "drink" },
+            { type: 'multiple_choice', question: "Completa: 'He ______ his homework in the evening.'", options: ["do", "does", "doing", "don't"], answer: "does" },
+            { type: 'true_false', question: "Para 'It', el verbo en presente simple siempre lleva 's'.", answer: true },
+            { type: 'fill_in_the_blank', question: "Completa: 'We ______ to the movies on weekends.'", answer: "go" },
+            { type: 'multiple_choice', question: "Completa: 'My brother ______ football.'", options: ["play", "plays", "playing", "played"], answer: "plays" },
+            { type: 'true_false', question: "'I like pizza' es una oración correcta en presente simple.", answer: true },
+            { type: 'fill_in_the_blank', question: "Completa: 'The sun ______ in the east.'", answer: "rises" },
+            { type: 'multiple_choice', question: "Completa: 'Cats ______ fish.'", options: ["eat", "eats", "eating", "eated"], answer: "eat" },
+
+            // There is / There are (10 items)
+            { type: 'multiple_choice', question: "Completa: '______ a cat on the roof.'", options: ["There are", "There is", "Is there", "Are there"], answer: "There is" },
+            { type: 'true_false', question: "'There are five books on the table' es correcto.", answer: true },
+            { type: 'fill_in_the_blank', question: "Completa: '______ not an apple in the fridge.'", answer: "There is" },
+            { type: 'multiple_choice', question: "Completa: '______ ten students in the class.'", options: ["There is", "There are", "Is there", "Are there"], answer: "There are" },
+            { type: 'true_false', question: "'Are there a car outside?' es una pregunta correcta.", answer: false },
+            { type: 'fill_in_the_blank', question: "Completa: '______ a lot of people here.'", answer: "There are" },
+            { type: 'multiple_choice', question: "Completa la pregunta: '______ a hospital near here?'", options: ["There is", "There are", "Is there", "Are there"], answer: "Is there" },
+            { type: 'true_false', question: "Para negar con 'There be', se añade 'not' después del verbo.", answer: true },
+            { type: 'fill_in_the_blank', question: "Completa: '______ two bananas on the table.'", answer: "There are" },
+            { type: 'multiple_choice', question: "Selecciona la forma correcta: '______ a fly in my soup.'", options: ["There are", "There is", "Is there", "Are there"], answer: "There is" },
+        ];
         
-        function showMessage(messageId, message, isError = true) {
-            const msgElement = document.getElementById(messageId);
-            msgElement.textContent = message;
-            msgElement.style.display = 'block';
-            msgElement.classList.toggle('text-red-500', isError);
-            msgElement.classList.toggle('text-green-500', !isError);
-        }
+        function renderQuestion() {
+            questionsContainer.innerHTML = '';
+            const q = allQuestions[currentQuestionIndex];
+            const card = document.createElement('div');
+            card.className = 'question-card';
 
-        // ---
-        // Manejadores de eventos de la UI
-        // ---
-        document.getElementById('navRegisterBtn').addEventListener('click', () => {
-            showModal('registerModal');
-        });
-
-        document.getElementById('closeRegisterModal').addEventListener('click', () => {
-            hideModal('registerModal');
-        });
-
-        document.getElementById('navLoginBtn').addEventListener('click', () => {
-            showModal('loginModal');
-        });
-
-        document.getElementById('closeLoginModal').addEventListener('click', () => {
-            hideModal('loginModal');
-        });
-
-        document.getElementById('forgotPasswordBtn').addEventListener('click', () => {
-            hideModal('loginModal');
-            showModal('forgotPasswordModal');
-        });
-        
-        document.getElementById('closeForgotPasswordModal').addEventListener('click', () => {
-            hideModal('forgotPasswordModal');
-        });
-
-        document.getElementById('openQuizStartModalBtn').addEventListener('click', () => {
-            showModal('quizStartModal');
-        });
-
-        document.getElementById('closeQuizStartModal').addEventListener('click', () => {
-            hideModal('quizStartModal');
-        });
-
-        // ---
-        // Integración con Apps Script para el registro
-        // ---
-        document.getElementById('registrationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setButtonLoadingState('registerBtnText', true);
-            const fullName = document.getElementById('regNombre').value;
-            const email = document.getElementById('regEmail').value;
-
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ fullName, email })
+            let optionsHtml = '';
+            if (q.type === 'multiple_choice') {
+                q.options.forEach(option => {
+                    optionsHtml += `<button class="option w-full text-left">${option}</button>`;
                 });
-
-                if (!response.ok) {
-                    const errorDetails = await response.text();
-                    throw new Error(`Error HTTP: ${response.status} - ${errorDetails}`);
+            } else if (q.type === 'true_false') {
+                optionsHtml = `<button class="option w-1/2">Verdadero</button><button class="option w-1/2">Falso</button>`;
+            } else if (q.type === 'fill_in_the_blank') {
+                optionsHtml = `<input type="text" class="border border-gray-300 rounded-lg p-2 w-full mt-2" placeholder="Escribe tu respuesta aquí...">`;
+            }
+            
+            card.innerHTML = `
+                <p class="question-text">Pregunta ${currentQuestionIndex + 1}/${allQuestions.length}: ${q.question}</p>
+                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
+                    ${optionsHtml}
+                </div>
+                <div class="feedback hidden"></div>
+                <button id="explainButton" class="explanation-button hidden">Explícame más ✨</button>
+                <div id="explanation-content" class="mt-4 hidden"></div>
+            `;
+            questionsContainer.appendChild(card);
+            
+            // Cargar respuesta guardada y habilitar el botón "Siguiente" si ya se respondió
+            if (userAnswers[currentQuestionIndex]) {
+                const answer = userAnswers[currentQuestionIndex].userAnswer;
+                if (q.type === 'multiple_choice' || q.type === 'true_false') {
+                    const buttons = card.querySelectorAll('.option');
+                    buttons.forEach(btn => {
+                        if (btn.textContent.trim() === answer) {
+                            btn.classList.add('selected');
+                        }
+                    });
+                } else if (q.type === 'fill_in_the_blank') {
+                    card.querySelector('input').value = answer;
                 }
+                const isCorrect = userAnswers[currentQuestionIndex].isCorrect;
+                const feedbackDiv = card.querySelector('.feedback');
+                feedbackDiv.textContent = isCorrect ? '¡Correcto! ¡Muy bien!' : `Incorrecto. La respuesta correcta era: ${q.answer}.`;
+                feedbackDiv.classList.add(isCorrect ? 'correct' : 'incorrect', 'show');
+                
+                // Show the explanation button
+                const explainButton = card.querySelector('#explainButton');
+                explainButton.classList.remove('hidden');
 
+                // If explanation was already requested, show it
+                if (userAnswers[currentQuestionIndex].explanation) {
+                    const explanationContent = card.querySelector('#explanation-content');
+                    explanationContent.innerHTML = `<h4 class="font-bold mb-2">Explicación:</h4><p>${userAnswers[currentQuestionIndex].explanation}</p>`;
+                    explanationContent.classList.remove('hidden');
+                }
+                
+                nextButton.disabled = false;
+            } else {
+                nextButton.disabled = true;
+            }
+
+            updateNavigationButtons();
+        }
+        
+        async function getExplanation(questionText, correctAnswer) {
+            const explanationContent = document.getElementById('explanation-content');
+            explanationContent.innerHTML = '<div class="loading-spinner"></div>';
+            explanationContent.classList.remove('hidden');
+
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const systemPrompt = "Actúa como un tutor de inglés amigable y experto. Explica de manera sencilla y clara la regla gramatical detrás de una pregunta de examen.";
+            const userQuery = `Explica la regla gramatical en español para la siguiente pregunta: "${questionText}". La respuesta correcta es "${correctAnswer}". Proporciona un ejemplo adicional.`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
                 const result = await response.json();
+                const candidate = result.candidates?.[0];
 
-                if (result.success) {
-                    hideModal('registerModal');
-                    showMessage('registration-success-message', '¡Gracias por tu inscripción! Te enviaremos un correo con tus credenciales una vez que tu cuenta sea aprobada.', false);
-                    setTimeout(() => {
-                        document.getElementById('registration-success-message').classList.remove('show');
-                        setTimeout(() => document.getElementById('registration-success-message').classList.add('hidden'), 1000);
-                    }, 5000);
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const explanationText = candidate.content.parts[0].text;
+                    explanationContent.innerHTML = `<h4 class="font-bold mb-2">Explicación:</h4><p>${explanationText}</p>`;
+                    userAnswers[currentQuestionIndex].explanation = explanationText;
                 } else {
-                    showMessage('registrationMessage', result.message || 'Error en el registro. Intenta de nuevo.', true);
+                    explanationContent.innerHTML = '<p class="text-red-500">Lo siento, no pude generar una explicación. Por favor, inténtalo de nuevo.</p>';
                 }
             } catch (error) {
-                console.error('Error al registrar usuario:', error);
-                showMessage('registrationMessage', `Error de conexión. Intenta de nuevo más tarde: ${error.message}`, true);
-            } finally {
-                setButtonLoadingState('registerBtnText', false);
+                console.error('Error fetching explanation:', error);
+                explanationContent.innerHTML = '<p class="text-red-500">Hubo un error al conectar con el servicio. Por favor, inténtalo de nuevo.</p>';
             }
-        });
+        }
 
-        // ---
-        // Lógica de inicio de sesión, olvidé contraseña, y quizzes
-        // (código existente del archivo original, adaptado a los módulos)
-        // ---
-        
-        // Manejo del formulario de login
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setButtonLoadingState('loginBtnText', true);
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+        function handleAnswer(userAnswer) {
+            const q = allQuestions[currentQuestionIndex];
+            const card = questionsContainer.children[0];
+            const feedbackDiv = card.querySelector('.feedback');
             
-            try {
-                // Autenticar al usuario con Firebase Auth
-                await signInWithEmailAndPassword(auth, email, password);
-                
-                // Si la autenticación es exitosa, ocultar el modal
-                hideModal('loginModal');
-                
-                // Aquí puedes redirigir al usuario o mostrar el contenido privado
-                // Por ejemplo, podrías mostrar el contenido del aula virtual
-                document.getElementById('introSection').classList.add('hidden');
-                document.getElementById('quizInstructionsSection').classList.add('hidden');
-                document.getElementById('virtualClassroomSection').classList.remove('hidden');
+            let isCorrect = false;
+            if (q.type === 'multiple_choice') {
+                isCorrect = userAnswer === q.answer;
+            } else if (q.type === 'true_false') {
+                isCorrect = (userAnswer === 'Verdadero' && q.answer) || (userAnswer === 'Falso' && !q.answer);
+            } else if (q.type === 'fill_in_the_blank') {
+                isCorrect = userAnswer.toLowerCase() === q.answer.toLowerCase();
+            }
+            
+            userAnswers[currentQuestionIndex] = { userAnswer, isCorrect };
 
-            } catch (error) {
-                let errorMessage;
-                switch (error.code) {
-                    case 'auth/user-not-found':
-                    case 'auth/wrong-password':
-                        errorMessage = 'Correo o contraseña incorrectos.';
-                        break;
-                    case 'auth/too-many-requests':
-                        errorMessage = 'Demasiados intentos fallidos. Inténtalo más tarde.';
-                        break;
-                    default:
-                        errorMessage = 'Error al iniciar sesión. Verifica tus credenciales.';
-                        break;
+            if (isCorrect) {
+                feedbackDiv.textContent = '¡Correcto! ¡Muy bien!';
+                feedbackDiv.classList.add('correct', 'show');
+            } else {
+                feedbackDiv.textContent = `Incorrecto. La respuesta correcta era: ${q.answer}.`;
+                feedbackDiv.classList.add('incorrect', 'show');
+            }
+            
+            const explainButton = document.getElementById('explainButton');
+            explainButton.classList.remove('hidden');
+            nextButton.disabled = false;
+        }
+
+        function updateNavigationButtons() {
+            prevButton.disabled = currentQuestionIndex === 0;
+            if (currentQuestionIndex === allQuestions.length - 1) {
+                nextButton.classList.add('hidden');
+                setTimeout(showResults, 500);
+            } else {
+                nextButton.classList.remove('hidden');
+            }
+        }
+
+        function showResults() {
+            let correctCount = 0;
+            questionsContainer.innerHTML = '';
+            resultsSummary.classList.remove('hidden');
+            
+            allQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'feedback show mt-4';
+                
+                let userAnswer = userAnswers[index] ? userAnswers[index].userAnswer : 'No respondida';
+                let isCorrect = userAnswers[index] ? userAnswers[index].isCorrect : false;
+
+                if (isCorrect) {
+                    correctCount++;
+                    feedbackDiv.textContent = '¡Correcto! ¡Muy bien!';
+                    feedbackDiv.classList.add('correct');
+                } else {
+                    feedbackDiv.textContent = `Incorrecto. La respuesta correcta era: ${q.answer}.`;
+                    feedbackDiv.classList.add('incorrect');
                 }
-                showMessage('loginMessage', errorMessage, true);
-            } finally {
-                setButtonLoadingState('loginBtnText', false);
+                
+                let questionContent = `<p class="question-text">Pregunta ${index + 1}: ${q.question}</p>`;
+                questionContent += `<p class="mt-2">Tu respuesta: <span class="font-bold">${userAnswer}</span></p>`;
+                
+                card.innerHTML = questionContent;
+                card.appendChild(feedbackDiv);
+                questionsContainer.appendChild(card);
+            });
+
+            resultsSummary.innerHTML = `
+                <h3 class="text-xl font-bold">Resultados</h3>
+                <p class="text-lg mt-2">Obtuviste ${correctCount} de ${allQuestions.length} respuestas correctas.</p>
+                <p class="mt-4 text-green-700 font-bold">¡Sigue practicando y lo lograrás!</p>
+            `;
+            
+            prevButton.classList.add('hidden');
+            nextButton.classList.add('hidden');
+            restartButtonWrapper.classList.remove('hidden');
+        }
+
+        startButton.addEventListener('click', () => {
+            studyGuide.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            startButtonContainer.classList.add('hidden');
+            renderQuestion();
+        });
+        
+        questionsContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.option')) {
+                const card = e.target.closest('.question-card');
+                const options = card.querySelectorAll('.option');
+                options.forEach(opt => opt.classList.remove('selected'));
+                e.target.classList.add('selected');
+                
+                const userAnswer = e.target.textContent.trim();
+                handleAnswer(userAnswer);
+            } else if (e.target.matches('#explainButton')) {
+                const question = allQuestions[currentQuestionIndex];
+                getExplanation(question.question, question.answer);
             }
         });
         
-        // Manejo del formulario de restablecer contraseña
-        document.getElementById('forgotPasswordForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            setButtonLoadingState('forgotBtnText', true);
-            const email = document.getElementById('forgotEmail').value;
-            
-            try {
-                await sendPasswordResetEmail(auth, email);
-                showMessage('forgotMessage', 'Se ha enviado un correo para restablecer tu contraseña. Revisa tu bandeja de entrada.', false);
-            } catch (error) {
-                let errorMessage = 'Error al enviar el correo de restablecimiento. Asegúrate de que el correo sea correcto.';
-                showMessage('forgotMessage', errorMessage, true);
-            } finally {
-                setButtonLoadingState('forgotBtnText', false);
+        questionsContainer.addEventListener('input', (e) => {
+            if (e.target.matches('input[type="text"]')) {
+                const userAnswer = e.target.value.trim();
+                if (userAnswer !== '') {
+                    handleAnswer(userAnswer);
+                } else {
+                    const card = questionsContainer.children[0];
+                    card.querySelector('.feedback').classList.remove('show', 'correct', 'incorrect');
+                    const explainButton = card.querySelector('#explainButton');
+                    explainButton.classList.add('hidden');
+                    const explanationContent = card.querySelector('#explanation-content');
+                    explanationContent.classList.add('hidden');
+                    nextButton.disabled = true;
+                }
             }
         });
 
-        // Lógica de los quizzes (se mantiene de tu código original)
-        // ...
+        prevButton.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentQuestionIndex < allQuestions.length - 1 && userAnswers[currentQuestionIndex]) {
+                currentQuestionIndex++;
+                renderQuestion();
+            }
+        });
         
-        // El resto del código del quiz y otras funciones se mantienen intactas.
-        
+        restartButton.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            correctAnswers = 0;
+            quizSection.classList.add('hidden');
+            resultsSummary.classList.add('hidden');
+            restartButtonWrapper.classList.add('hidden');
+            studyGuide.classList.remove('hidden');
+            startButtonContainer.classList.remove('hidden');
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderQuestion();
+        });
     </script>
 </body>
 </html>
