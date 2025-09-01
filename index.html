@@ -1,626 +1,389 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía de Estudio y Evaluación Avanzada de Inglés</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-        }
-        .container {
-            max-width: 900px;
-            margin: auto;
-            padding: 2rem;
-            background-color: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .section-title {
-            font-size: clamp(1.5rem, 5vw, 2.25rem);
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        .section-subtitle {
-            font-size: clamp(1.25rem, 4vw, 1.5rem);
-            font-weight: 600;
-            color: #374151;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-        }
-        .study-guide-content p, .study-guide-content ul {
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-        .study-guide-content ul {
-            padding-left: 1.5rem;
-            list-style-type: disc;
-        }
-        .question-card {
-            background-color: #f9fafb;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin-bottom: 1.5rem;
-            border: 1px solid #e5e7eb;
-        }
-        .question-text {
-            font-size: clamp(1rem, 3vw, 1.125rem);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        .feedback {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            font-weight: 500;
-            color: #ffffff;
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .feedback.correct { background-color: #10b981; }
-        .feedback.incorrect { background-color: #ef4444; }
-        .feedback.show { opacity: 1; }
-        .option, .navigation-button, .start-button, .restart-button, .explanation-button {
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .option {
-            background-color: white;
-            border: 1px solid #d1d5db;
-        }
-        .option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .option.selected {
-            border-color: #2563eb;
-            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
-        }
-        .option.correct {
-            background-color: #d1fae5;
-            border-color: #10b981;
-        }
-        .option.incorrect {
-            background-color: #fee2e2;
-            border-color: #ef4444;
-        }
-        .navigation-button {
-            background-color: #4b5563;
-            color: white;
-            font-weight: 500;
-        }
-        .navigation-button:hover:not(:disabled) {
-            background-color: #1f2937;
-        }
-        .navigation-button:disabled {
-            background-color: #9ca3af;
-            cursor: not-allowed;
-        }
-        .start-button, .restart-button {
-            background-color: #2563eb;
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .start-button:hover, .restart-button:hover {
-            background-color: #1d4ed8;
-        }
-        .explanation-button {
-            background-color: #4f46e5;
-            color: white;
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            margin-top: 1rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s;
-        }
-        .explanation-button:hover {
-            background-color: #4338ca;
-        }
-        .explanation-section {
-            margin-top: 1rem;
-            padding: 1.5rem;
-            background-color: #eef2ff;
-            border-radius: 0.75rem;
-            border: 1px solid #c7d2fe;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        #quiz-section.hidden, #study-guide.hidden, #start-button-container.hidden {
-            display: none;
-        }
-        #results-summary {
-            background-color: #e5e7eb;
-            padding: 1.5rem;
-            border-radius: 1rem;
-            text-align: center;
-            margin-top: 2rem;
-            animation: fadeIn 1s ease-in-out;
-        }
-        .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-left-color: #4f46e5;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* Responsive design for a better mobile experience */
-        @media (max-width: 600px) {
-            .container { padding: 1rem; }
-            .section-title { margin-bottom: 1rem; }
-            .section-subtitle { margin-top: 1rem; }
-            .question-card { padding: 1rem; }
-            .question-text { font-size: 1rem; }
-            .flex.flex-col.md\:flex-row { flex-direction: column; }
-            .md\:space-x-4 { space-x: 0; }
-        }
-    </style>
-</head>
-<body class="bg-gray-100 p-4 sm:p-8">
-    <div class="container">
-        <!-- Título principal -->
-        <div class="flex flex-col items-center">
-            <h1 class="section-title">Guía de Estudio y Evaluación Avanzada de Inglés</h1>
-        </div>
-
-        <!-- Sección de Guía de Estudio -->
-        <div id="study-guide" class="study-guide-content mt-8">
-            <h2 class="section-subtitle">Guía de Estudio: Gramática Básica en Inglés</h2>
-            <p>Esta guía de estudio repasa los conceptos clave de gramática inglesa del Módulo 2 para que fortalezcas tu comprensión.</p>
-            <h3 class="text-xl font-bold mt-4 mb-2">Temas principales:</h3>
-            <ul class="list-disc ml-6">
-                <li>Adjetivos posesivos y pronombres de objeto</li>
-                <li>Pronombres demostrativos</li>
-                <li>Adjetivos y su posición en la oración</li>
-                <li>Presente simple</li>
-                <li>There is / There are</li>
-            </ul>
-
-            <h3 class="section-subtitle">1. Adjetivos Posesivos y Pronombres de Objeto</h3>
-            <p>Indican a quién pertenece algo o quién recibe la acción.</p>
-            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
-                <p><strong class="font-bold">Ejemplos:</strong></p>
-                <ul class="list-disc ml-6">
-                    <li>This is **my** book. (Adjetivo posesivo)</li>
-                    <li>He is talking to **me**. (Pronombre de objeto)</li>
-                    <li>That is **their** house. (Adjetivo posesivo)</li>
-                    <li>I am giving the gift to **him**. (Pronombre de objeto)</li>
-                    <li>She is washing **her** hands. (Adjetivo posesivo)</li>
-                    <li>Can you help **us**? (Pronombre de objeto)</li>
-                    <li>**Our** teacher is nice. (Adjetivo posesivo)</li>
-                    <li>He is calling **them**. (Pronombre de objeto)</li>
+<script>
+    const sections = {
+        'adjetivos-posesivos': {
+            title: 'Adjetivos Posesivos (Possessive Adjectives)',
+            content: `
+                <h3 class="text-2xl font-semibold">Concepto</h3>
+                <p>Los adjetivos posesivos indican a quién o a quiénes le pertenece algo. Se usan siempre junto a un sustantivo (noun).</p>
+                <h3 class="text-2xl font-semibold mt-4">Regla principal</h3>
+                <p>Se colocan <strong>antes</strong> del sustantivo que describen.</p>
+                <h3 class="text-2xl font-semibold mt-4">Ejemplos clave</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>My</strong> (mi/mis): <strong>My</strong> name is Ana.</li>
+                    <li><strong>Your</strong> (tu/tus): <strong>Your</strong> house is big.</li>
+                    <li><strong>His</strong> (su, de él): <strong>His</strong> car is red.</li>
+                    <li><strong>Her</strong> (su, de ella): <strong>Her</strong> bag is small.</li>
+                    <li><strong>Its</strong> (su, de eso/animal): <strong>Its</strong> tail is long.</li>
+                    <li><strong>Our</strong> (nuestro/a): <strong>Our</strong> family is nice.</li>
+                    <li><strong>Their</strong> (su, de ellos/as): <strong>Their</strong> dog is cute.</li>
                 </ul>
-            </div>
-            
-            <h3 class="section-subtitle">2. Pronombres Demostrativos</h3>
-            <p>Señalan objetos o personas, indicando si están cerca o lejos y si son singulares o plurales.</p>
-            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
-                <p><strong class="font-bold">Ejemplos:</strong></p>
-                <ul class="list-disc ml-6">
-                    <li>**This** is a cat. (cerca, singular)</li>
-                    <li>**That** is a dog. (lejos, singular)</li>
-                    <li>**These** are my keys. (cerca, plural)</li>
-                    <li>**Those** are your friends. (lejos, plural)</li>
-                    <li>**This** car is fast. (cerca, singular)</li>
-                    <li>**That** building is tall. (lejos, singular)</li>
-                    <li>**These** books are mine. (cerca, plural)</li>
-                    <li>**Those** trees are old. (lejos, plural)</li>
+            `,
+            quiz: [
+                { type: 'multiple-choice', question: '¿Cuál es el adjetivo posesivo para "I"?', options: ['Your', 'My', 'His'], answer: 'My' },
+                { type: 'true-false', question: '¿Los adjetivos posesivos van después del sustantivo?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "This is _____ book." (You)', answer: 'your' },
+                { type: 'multiple-choice', question: 'Si la dueña es una mujer, ¿qué adjetivo posesivo usarías para referirte a su bolso?', options: ['His', 'Her', 'Our'], answer: 'Her' },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "The dog is wagging _____ tail." (It)', answer: 'its' },
+                { type: 'true-false', question: '¿"Their" se usa para un solo dueño?', answer: false },
+                { type: 'multiple-choice', question: '¿Cuál es el adjetivo posesivo para "We"?', options: ['They', 'Our', 'Your'], answer: 'Our' },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "_____ name is Pedro." (He)', answer: 'His' },
+                { type: 'true-false', question: '¿"My" solo se usa para singular?', answer: false },
+                { type: 'multiple-choice', question: '¿Qué adjetivo posesivo usarías para hablar del auto de tus amigos?', options: ['Our', 'My', 'Their'], answer: 'Their' }
+            ]
+        },
+        'adjetivos': {
+            title: 'Adjetivos (Adjectives)',
+            content: `
+                <h3 class="text-2xl font-semibold">Concepto</h3>
+                <p>Son palabras que describen sustantivos, respondiendo a las preguntas "¿cómo es?" o "¿cómo está?".</p>
+                <h3 class="text-2xl font-semibold mt-4">Reglas y consejos</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Ubicación:</strong> Los adjetivos siempre van <strong>antes</strong> del sustantivo en inglés (ejemplo: a <strong>red</strong> apple).</li>
+                    <li><strong>Plural:</strong> No tienen forma plural. Si el sustantivo es plural, el adjetivo se mantiene igual (ejemplo: two <strong>delicious</strong> cookies).</li>
+                    <li><strong>Género:</strong> No tienen género. Se usan de la misma forma para sustantivos masculinos o femeninos (ejemplo: a <strong>good</strong> mom, a <strong>good</strong> dad).</li>
                 </ul>
-            </div>
-
-            <h3 class="section-subtitle">3. Adjetivos y su posición</h3>
-            <p>En inglés, los adjetivos se colocan **siempre** antes del sustantivo que describen.</p>
-            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
-                <p><strong class="font-bold">Ejemplos:</strong></p>
-                <ul class="list-disc ml-6">
-                    <li>It's a **big** car. (Correcto)</li>
-                    <li>He is a **funny** person. (Correcto)</li>
-                    <li>She has **beautiful** hair. (Correcto)</li>
-                    <li>They live in a **new** house. (Correcto)</li>
+                <h3 class="text-2xl font-semibold mt-4">Ejemplos clave</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>A <strong>red</strong> apple (Una manzana roja)</li>
+                    <li>A <strong>happy</strong> boy (Un chico feliz)</li>
+                    <li>My cats are <strong>small</strong> (Mis gatos son pequeños)</li>
                 </ul>
-            </div>
-
-            <h3 class="section-subtitle">4. Presente Simple</h3>
-            <p>Para expresar hábitos o rutinas. Recuerda la regla de la tercera persona del singular (He, She, It): añade **-s** al verbo.</p>
-            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
-                <p><strong class="font-bold">Ejemplos:</strong></p>
-                <ul class="list-disc ml-6">
-                    <li>She **studies** for the exam.</li>
-                    <li>He **plays** the guitar.</li>
-                    <li>It **rains** a lot here.</li>
-                    <li>They **work** every day.</li>
+            `,
+            quiz: [
+                { type: 'true-false', question: '¿Los adjetivos en inglés se colocan después del sustantivo?', answer: false },
+                { type: 'multiple-choice', question: '¿Qué adjetivo describe a un sustantivo?', options: ['Run', 'Big', 'Quickly'], answer: 'Big' },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "She has a _____ house." (beautiful)', answer: 'beautiful' },
+                { type: 'true-false', question: '¿Los adjetivos tienen género en inglés?', answer: false },
+                { type: 'multiple-choice', question: '¿Cuál de estos es un adjetivo?', options: ['Walk', 'Car', 'Tall'], answer: 'Tall' },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "The _____ children are playing." (happy)', answer: 'happy' },
+                { type: 'true-false', question: '¿Los adjetivos en inglés no tienen forma plural?', answer: true },
+                { type: 'multiple-choice', question: '¿Cómo dirías "libros interesantes"?', options: ['Books interesting', 'Interesting books', 'Books are interesting'], answer: 'Interesting books' },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "The soup is _____." (hot)', answer: 'hot' },
+                { type: 'true-false', question: '¿"Good" es un adjetivo que cambia con el género?', answer: false }
+            ]
+        },
+        'pronombres-demostrativos': {
+            title: 'Pronombres Demostrativos (Demonstrative Pronouns)',
+            content: `
+                <h3 class="text-2xl font-semibold">Concepto</h3>
+                <p>Se utilizan para señalar personas, animales o cosas, e indican si están cerca o lejos.</p>
+                <h3 class="text-2xl font-semibold mt-4">Reglas principales</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Cerca:</strong> Se usa <strong>this</strong> para singular y <strong>these</strong> para plural.</li>
+                    <li><strong>Lejos:</strong> Se usa <strong>that</strong> para singular y <strong>those</strong> para plural.</li>
                 </ul>
-            </div>
-
-            <h3 class="section-subtitle">5. There is / There are</h3>
-            <p>Indican la existencia de algo. **`There is`** para singular y **`There are`** para plural.</p>
-            <div class="bg-gray-200 p-4 rounded-lg mt-2 mb-4">
-                <p><strong class="font-bold">Ejemplos:</strong></p>
-                <ul class="list-disc ml-6">
-                    <li>**There is** a cat in the box.</li>
-                    <li>**There are** two cats in the box.</li>
-                    <li>**Is there** any milk?</li>
-                    <li>**Are there** any pencils?</li>
+                <h3 class="text-2xl font-semibold mt-4">Ejemplos clave</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>This</strong> is my pen. (<strong>Este</strong> es mi bolígrafo.)</li>
+                    <li><strong>These</strong> are my pens. (<strong>Estos</strong> son mis bolígrafos.)</li>
+                    <li><strong>That</strong> is his shoe. (<strong>Ese</strong> es su zapato.)</li>
+                    <li><strong>Those</strong> are his shoes. (<strong>Esos</strong> son sus zapatos.)</li>
                 </ul>
-            </div>
-            <div id="start-button-container" class="mt-8 flex justify-center">
-                <button id="startButton" class="start-button">
-                    Ir a la Evaluación
-                </button>
-            </div>
-        </div>
+            `,
+            quiz: [
+                { type: 'multiple-choice', question: '¿Qué pronombre usarías para señalar un libro que tienes en la mano?', options: ['That', 'These', 'This'], answer: 'This' },
+                { type: 'true-false', question: '¿"Those" se usa para cosas que están lejos y son singulares?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "I love _____ shirt." (cerca, singular)', answer: 'this' },
+                { type: 'multiple-choice', question: '¿Qué pronombre usarías para hablar de los autos que están lejos?', options: ['These', 'That', 'Those'], answer: 'Those' },
+                { type: 'true-false', question: '¿"This" y "These" se usan para referirse a cosas que están cerca?', answer: true },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "_____ are my friends." (cerca, plural)', answer: 'These' },
+                { type: 'multiple-choice', question: '¿Cuál es la forma plural de "That"?', options: ['This', 'Those', 'These'], answer: 'Those' },
+                { type: 'true-false', question: '¿"That" se usa para cosas que están lejos?', answer: true },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "Look at _____ bird over there." (lejos, singular)', answer: 'that' },
+                { type: 'multiple-choice', question: '¿Qué pronombre usarías para hablar de varios libros que están en la mesa de enfrente?', options: ['These', 'Those', 'This'], answer: 'Those' }
+            ]
+        },
+        'presente-simple': {
+            title: 'Presente Simple (Simple Present)',
+            content: `
+                <h3 class="text-2xl font-semibold">Concepto</h3>
+                <p>Es un tiempo verbal que se usa para hablar de acciones habituales o hechos en el presente.</p>
+                <h3 class="text-2xl font-semibold mt-4">Reglas de conjugación</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Para los pronombres <strong>I, you, we, they</strong>, el verbo no cambia.</li>
+                    <li>Para la tercera persona del singular (<strong>he, she, it</strong>), se añade una <strong>-s</strong> al final del verbo.</li>
+                </ul>
+            `,
+            quiz: [
+                { type: 'multiple-choice', question: '¿Cómo se conjuga el verbo "to work" con "She"?', options: ['work', 'works', 'working'], answer: 'works' },
+                { type: 'true-false', question: '¿El verbo cambia para "I" en presente simple?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "We _____ in a big house." (live)', answer: 'live' },
+                { type: 'multiple-choice', question: '¿Qué pronombre personal no sigue la regla de la "-s"?', options: ['He', 'It', 'You'], answer: 'You' },
+                { type: 'true-false', question: '¿La tercera persona del singular es "he, she, they"?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "He _____ to the park every day." (go)', answer: 'goes' },
+                { type: 'multiple-choice', question: '¿Cómo se conjuga el verbo "to play" con "They"?', options: ['play', 'plays', 'playing'], answer: 'play' },
+                { type: 'true-false', question: '¿"She reads" es un ejemplo correcto del presente simple?', answer: true },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "The sun _____." (shine)', answer: 'shines' },
+                { type: 'true-false', question: '¿El verbo "to study" con "I" se conjuga como "I studies"?', answer: false }
+            ]
+        },
+        'pronombres': {
+            title: 'Pronombres de Sujeto y Objeto',
+            content: `
+                <h3 class="text-2xl font-semibold">Concepto</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li>Los pronombres de <strong>sujeto</strong> (I, you, he, etc.) realizan la acción en la oración.</li>
+                    <li>Los pronombres de <strong>objeto</strong> (me, you, him, etc.) reciben la acción.</li>
+                </ul>
+                <h3 class="text-2xl font-semibold mt-4">Ejemplos clave</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>Sujeto:</strong> <strong>I</strong> am a student. (<strong>Yo</strong> soy un estudiante.)</li>
+                    <li><strong>Objeto:</strong> Give <strong>me</strong> the book. (Dame <strong>el libro</strong>.)</li>
+                    <li><strong>Sujeto:</strong> <strong>She</strong> is my sister. (<strong>Ella</strong> es mi hermana.)</li>
+                    <li><strong>Objeto:</strong> I know <strong>her</strong>. (La conozco a <strong>ella</strong>.)</li>
+                </ul>
+            `,
+            quiz: [
+                { type: 'multiple-choice', question: '¿Qué pronombre usarías para referirte a "Ana" en una oración como sujeto?', options: ['Her', 'She', 'Him'], answer: 'She' },
+                { type: 'true-false', question: '¿El pronombre de objeto "him" reemplaza a un hombre?', answer: true },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "Call _____." (Samuel)', answer: 'him' },
+                { type: 'multiple-choice', question: '¿Cuál es el pronombre de objeto para "we"?', options: ['us', 'them', 'we'], answer: 'us' },
+                { type: 'true-false', question: '¿Los pronombres de sujeto reciben la acción?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "My family and I are happy. _____ are happy." (Nosotros)', answer: 'We' },
+                { type: 'multiple-choice', question: 'En "She is looking at him", ¿qué pronombre es el objeto?', options: ['She', 'is', 'him'], answer: 'him' },
+                { type: 'true-false', question: '¿"They" es un pronombre de objeto?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "I love my dog. I love _____." (it)', answer: 'it' },
+                { type: 'multiple-choice', question: '¿Qué pronombre de objeto usarías para referirte a "mis amigos"?', options: ['us', 'you', 'them'], answer: 'them' }
+            ]
+        },
+        'there-be': {
+            title: 'There be (There is / There are)',
+            content: `
+                <h3 class="text-2xl font-semibold">Concepto</h3>
+                <p>Se usa para indicar la existencia de algo, equivalente a la conjugación de "haber" en español ("hay").</p>
+                <h3 class="text-2xl font-semibold mt-4">Reglas principales</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>There is</strong> se usa para sustantivos en singular. Se puede contraer a <strong>There's</strong>.</li>
+                    <li><strong>There are</strong> se usa para sustantivos en plural y <strong>no</strong> se contrae.</li>
+                </ul>
+                <h3 class="text-2xl font-semibold mt-4">Ejemplos clave</h3>
+                <ul class="list-disc list-inside space-y-2">
+                    <li><strong>There is</strong> an apple. (Hay una manzana.)</li>
+                    <li><strong>There are</strong> five dogs. (Hay cinco perros.)</li>
+                    <li><strong>Negación:</strong> Se añade <strong>not</strong> después de \`is\` o \`are\` (ejemplo: <strong>There is not</strong> an apple).</li>
+                    <li><strong>Pregunta:</strong> Se invierte el orden del verbo (ejemplo: <strong>Is there</strong> an apple?).</li>
+                </ul>
+            `,
+            quiz: [
+                { type: 'multiple-choice', question: '¿Qué usarías para decir que hay una silla?', options: ['There are a chair', 'There is a chair', 'There is some chairs'], answer: 'There is a chair' },
+                { type: 'true-false', question: '¿"There are" se puede contraer a "There\'re"?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "_____ two books on the table."', answer: 'There are' },
+                { type: 'multiple-choice', question: 'Para preguntar si hay agua, ¿cómo iniciarías la oración?', options: ['Are there', 'Is there', 'There is'], answer: 'Is there' },
+                { type: 'true-false', question: '¿"There is not" es la forma correcta de negar para singular?', answer: true },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "_____ a cat in the garden."', answer: 'There is' },
+                { type: 'multiple-choice', question: '¿Qué usarías para decir que no hay cinco perros?', options: ['There is not five dogs', 'There aren\'t five dogs', 'There not are five dogs'], answer: 'There aren\'t five dogs' },
+                { type: 'true-false', question: '¿"There is" se usa para sustantivos en plural?', answer: false },
+                { type: 'fill-in-the-blank', question: 'Completa la frase: "_____ not a car outside."', answer: 'There is' },
+                { type: 'multiple-choice', question: 'Para preguntar si hay diez personas en la sala, ¿cómo iniciarías la oración?', options: ['Is there', 'Are there', 'There are'], answer: 'Are there' }
+            ]
+        }
+    };
 
-        <!-- Sección de Evaluación -->
-        <div id="quiz-section" class="hidden">
-            <h2 class="section-subtitle text-center">Evaluación</h2>
-            <p class="text-center text-gray-600 mb-6">Responde las siguientes 50 preguntas. Usa los botones para navegar.</p>
-            <div id="questions-container"></div>
-            
-            <!-- Botones de navegación -->
-            <div class="flex justify-between mt-8">
-                <button id="prevButton" class="navigation-button py-2 px-4 rounded-full" disabled>
-                    Atrás
-                </button>
-                <button id="nextButton" class="navigation-button py-2 px-4 rounded-full" disabled>
-                    Siguiente
-                </button>
-            </div>
-            
-            <div id="results-summary" class="hidden"></div>
-            <div id="restartButtonWrapper" class="hidden mt-4 flex flex-col items-center">
-                <button id="restartButton" class="restart-button">
-                    Volver a la Guía
-                </button>
-            </div>
-        </div>
-    </div>
+    let currentSection = '';
+    let timerInterval;
+    let startTime;
+    let timeLeft = 900;
 
-    <script>
-        const studyGuide = document.getElementById('study-guide');
-        const quizSection = document.getElementById('quiz-section');
-        const startButton = document.getElementById('startButton');
-        const questionsContainer = document.getElementById('questions-container');
-        const prevButton = document.getElementById('prevButton');
-        const nextButton = document.getElementById('nextButton');
-        const resultsSummary = document.getElementById('results-summary');
-        const restartButton = document.getElementById('restartButton');
-        const restartButtonWrapper = document.getElementById('restartButtonWrapper');
-        const startButtonContainer = document.getElementById('start-button-container');
+    const mainMenu = document.getElementById('main-menu');
+    const sectionTemplate = document.getElementById('section-template');
+    const quizTemplate = document.getElementById('quiz-template');
 
-        let currentQuestionIndex = 0;
-        let userAnswers = {};
-        let correctAnswers = 0;
-
-        const allQuestions = [
-            // Adjetivos Posesivos y Pronombres de Objeto (10 items)
-            { type: 'multiple_choice', question: "Completa la frase: 'This is my sister. ______ name is Ana.'", options: ["His", "Her", "Its", "Your"], answer: "Her" },
-            { type: 'true_false', question: "'I am helping he' es correcto.", answer: false },
-            { type: 'fill_in_the_blank', question: "Completa: 'They are calling ______.'", answer: "us" },
-            { type: 'multiple_choice', question: "Completa la frase: 'We live in Canada. ______ house is in Toronto.'", options: ["Their", "Our", "My", "Her"], answer: "Our" },
-            { type: 'true_false', question: "'She is talking to them' es una oración correcta.", answer: true },
-            { type: 'fill_in_the_blank', question: "Completa: 'Can you give the book to ______? (Pedro)'", answer: "him" },
-            { type: 'multiple_choice', question: "Completa la frase: 'The dog is wagging ______ tail.'", options: ["his", "her", "its", "their"], answer: "its" },
-            { type: 'true_false', question: "'Please come with I' es una oración correcta.", answer: false },
-            { type: 'fill_in_the_blank', question: "Completa: 'This is not my book. It is ______.' (you)", answer: "yours" },
-            { type: 'multiple_choice', question: "Completa la frase: 'Ana and Tom have a new car. ______ car is very fast.'", options: ["Her", "His", "Their", "Our"], answer: "Their" },
-            
-            // Pronombres Demostrativos (10 items)
-            { type: 'multiple_choice', question: "______ are my shoes. (cerca, plural)", options: ["This", "These", "That", "Those"], answer: "These" },
-            { type: 'true_false', question: "'That' se usa para un objeto singular que está cerca.", answer: false },
-            { type: 'fill_in_the_blank', question: "Completa: '______ is my brother.' (cerca, singular)", answer: "This" },
-            { type: 'multiple_choice', question: "______ are my pens. (lejos, plural)", options: ["This", "These", "That", "Those"], answer: "Those" },
-            { type: 'true_false', question: "'This' se usa para un objeto plural que está cerca.", answer: false },
-            { type: 'fill_in_the_blank', question: "Completa: '______ is a big mountain.' (lejos, singular)", answer: "That" },
-            { type: 'multiple_choice', question: "Selecciona el pronombre correcto: '______ books on the table are mine.' (cerca, plural)", options: ["Those", "This", "These", "That"], answer: "These" },
-            { type: 'true_false', question: "'Those' se usa para referirse a algo que está lejos y en plural.", answer: true },
-            { type: 'fill_in_the_blank', question: "Completa: 'Can you see ______ house over there?' (lejos, singular)", answer: "that" },
-            { type: 'multiple_choice', question: "Selecciona el pronombre correcto: 'I love ______ cat. (cerca, singular)", options: ["This", "That", "These", "Those"], answer: "This" },
-
-            // Adjetivos y su posición (10 items)
-            { type: 'multiple_choice', question: "Traduce al inglés: 'Es una casa grande.'", options: ["It's a house big", "It's a big house", "A big house is it", "A house is big"], answer: "It's a big house" },
-            { type: 'true_false', question: "La frase 'He is a tall man' es gramaticalmente correcta.", answer: true },
-            { type: 'fill_in_the_blank', question: "Ordena las palabras: 'car / new / a / I / have'", answer: "I have a new car" },
-            { type: 'multiple_choice', question: "Selecciona la oración correcta:", options: ["She has hair long", "She has long hair", "Long hair she has", "Hair long she has"], answer: "She has long hair" },
-            { type: 'true_false', question: "En inglés, el adjetivo se coloca después del sustantivo.", answer: false },
-            { type: 'fill_in_the_blank', question: "Traduce: 'Ella tiene un perro pequeño.'", answer: "She has a small dog" },
-            { type: 'multiple_choice', question: "Traduce: 'El es un chico inteligente.'", options: ["He is a smart boy", "He is a boy smart", "A smart boy he is", "He is smart boy"], answer: "He is a smart boy" },
-            { type: 'true_false', question: "La frase 'The dog is black' es incorrecta.", answer: false },
-            { type: 'fill_in_the_blank', question: "Ordena las palabras: 'nice / is / a / He / person'", answer: "He is a nice person" },
-            { type: 'multiple_choice', question: "Selecciona la oración correcta:", options: ["My shirt is blue", "My shirt blue is", "Blue my shirt is", "Blue is my shirt"], answer: "My shirt is blue" },
-
-            // Presente Simple (10 items)
-            { type: 'multiple_choice', question: "Completa: 'She usually ______ to the park.'", options: ["go", "goes", "going", "gone"], answer: "goes" },
-            { type: 'true_false', question: "'They works in the office' es una oración correcta.", answer: false },
-            { type: 'fill_in_the_blank', question: "Completa: 'I ______ coffee every morning.'", answer: "drink" },
-            { type: 'multiple_choice', question: "Completa: 'He ______ his homework in the evening.'", options: ["do", "does", "doing", "don't"], answer: "does" },
-            { type: 'true_false', question: "Para 'It', el verbo en presente simple siempre lleva 's'.", answer: true },
-            { type: 'fill_in_the_blank', question: "Completa: 'We ______ to the movies on weekends.'", answer: "go" },
-            { type: 'multiple_choice', question: "Completa: 'My brother ______ football.'", options: ["play", "plays", "playing", "played"], answer: "plays" },
-            { type: 'true_false', question: "'I like pizza' es una oración correcta en presente simple.", answer: true },
-            { type: 'fill_in_the_blank', question: "Completa: 'The sun ______ in the east.'", answer: "rises" },
-            { type: 'multiple_choice', question: "Completa: 'Cats ______ fish.'", options: ["eat", "eats", "eating", "eated"], answer: "eat" },
-
-            // There is / There are (10 items)
-            { type: 'multiple_choice', question: "Completa: '______ a cat on the roof.'", options: ["There are", "There is", "Is there", "Are there"], answer: "There is" },
-            { type: 'true_false', question: "'There are five books on the table' es correcto.", answer: true },
-            { type: 'fill_in_the_blank', question: "Completa: '______ not an apple in the fridge.'", answer: "There is" },
-            { type: 'multiple_choice', question: "Completa: '______ ten students in the class.'", options: ["There is", "There are", "Is there", "Are there"], answer: "There are" },
-            { type: 'true_false', question: "'Are there a car outside?' es una pregunta correcta.", answer: false },
-            { type: 'fill_in_the_blank', question: "Completa: '______ a lot of people here.'", answer: "There are" },
-            { type: 'multiple_choice', question: "Completa la pregunta: '______ a hospital near here?'", options: ["There is", "There are", "Is there", "Are there"], answer: "Is there" },
-            { type: 'true_false', question: "Para negar con 'There be', se añade 'not' después del verbo.", answer: true },
-            { type: 'fill_in_the_blank', question: "Completa: '______ two bananas on the table.'", answer: "There are" },
-            { type: 'multiple_choice', question: "Selecciona la forma correcta: '______ a fly in my soup.'", options: ["There are", "There is", "Is there", "Are there"], answer: "There is" },
-        ];
+    function showSection(sectionId) {
+        currentSection = sectionId;
+        mainMenu.classList.add('hidden');
+        quizTemplate.classList.add('hidden');
         
-        function renderQuestion() {
-            questionsContainer.innerHTML = '';
-            const q = allQuestions[currentQuestionIndex];
-            const card = document.createElement('div');
-            card.className = 'question-card';
+        sectionTemplate.querySelector('#section-title').innerText = sections[sectionId].title;
+        sectionTemplate.querySelector('#section-content').innerHTML = sections[sectionId].content;
+        sectionTemplate.classList.remove('hidden');
+    }
 
-            let optionsHtml = '';
-            if (q.type === 'multiple_choice') {
+    function showQuiz() {
+        sectionTemplate.classList.add('hidden');
+        
+        quizTemplate.querySelector('#quiz-title').innerText = 'Quiz: ' + sections[currentSection].title;
+        const quizQuestionsContainer = quizTemplate.querySelector('#quiz-questions');
+        const quizData = sections[currentSection].quiz;
+
+        quizQuestionsContainer.innerHTML = '';
+        quizData.forEach((q, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.id = `question-${index}`;
+            questionDiv.classList.add('mb-6');
+
+            const questionText = document.createElement('p');
+            questionText.classList.add('text-lg', 'font-medium', 'mb-3');
+            questionText.innerHTML = `${index + 1}. ${q.question}`;
+            questionDiv.appendChild(questionText);
+            
+            if (q.type === 'multiple-choice') {
                 q.options.forEach(option => {
-                    optionsHtml += `<button class="option w-full text-left">${option}</button>`;
+                    const button = document.createElement('button');
+                    button.classList.add('quiz-option', 'bg-gray-200', 'hover:bg-gray-300', 'p-3', 'rounded-lg', 'w-full', 'text-left', 'mb-2');
+                    button.innerText = option;
+                    button.onclick = () => checkAnswer(button, option, q.answer, index, q.type);
+                    questionDiv.appendChild(button);
                 });
-            } else if (q.type === 'true_false') {
-                optionsHtml = `<button class="option w-1/2">Verdadero</button><button class="option w-1/2">Falso</button>`;
-            } else if (q.type === 'fill_in_the_blank') {
-                optionsHtml = `<input type="text" class="border border-gray-300 rounded-lg p-2 w-full mt-2" placeholder="Escribe tu respuesta aquí...">`;
+            } else if (q.type === 'true-false') {
+                ['Verdadero', 'Falso'].forEach(option => {
+                    const button = document.createElement('button');
+                    button.classList.add('quiz-option', 'bg-gray-200', 'hover:bg-gray-300', 'p-3', 'rounded-lg', 'w-full', 'text-left', 'mb-2');
+                    button.innerText = option;
+                    const userChoice = (option === 'Verdadero');
+                    button.onclick = () => checkAnswer(button, userChoice, q.answer, index, q.type);
+                    questionDiv.appendChild(button);
+                });
+            } else if (q.type === 'fill-in-the-blank') {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.classList.add('p-2', 'rounded-lg', 'border', 'border-gray-300', 'w-full', 'mb-2');
+                const checkButton = document.createElement('button');
+                checkButton.classList.add('bg-blue-500', 'text-white', 'py-2', 'px-4', 'rounded-lg', 'hover:bg-blue-600', 'transition');
+                checkButton.innerText = 'Revisar';
+                checkButton.onclick = () => checkAnswer(input, input.value.trim().toLowerCase(), q.answer.toLowerCase(), index, q.type);
+                questionDiv.appendChild(input);
+                questionDiv.appendChild(checkButton);
             }
-            
-            card.innerHTML = `
-                <p class="question-text">Pregunta ${currentQuestionIndex + 1}/${allQuestions.length}: ${q.question}</p>
-                <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4">
-                    ${optionsHtml}
-                </div>
-                <div class="feedback hidden"></div>
-                <button id="explainButton" class="explanation-button hidden">Explícame más ✨</button>
-                <div id="explanation-content" class="mt-4 hidden"></div>
-            `;
-            questionsContainer.appendChild(card);
-            
-            // Cargar respuesta guardada y habilitar el botón "Siguiente" si ya se respondió
-            if (userAnswers[currentQuestionIndex]) {
-                const answer = userAnswers[currentQuestionIndex].userAnswer;
-                if (q.type === 'multiple_choice' || q.type === 'true_false') {
-                    const buttons = card.querySelectorAll('.option');
-                    buttons.forEach(btn => {
-                        if (btn.textContent.trim() === answer) {
-                            btn.classList.add('selected');
-                        }
-                    });
-                } else if (q.type === 'fill_in_the_blank') {
-                    card.querySelector('input').value = answer;
-                }
-                const isCorrect = userAnswers[currentQuestionIndex].isCorrect;
-                const feedbackDiv = card.querySelector('.feedback');
-                feedbackDiv.textContent = isCorrect ? '¡Correcto! ¡Muy bien!' : `Incorrecto. La respuesta correcta era: ${q.answer}.`;
-                feedbackDiv.classList.add(isCorrect ? 'correct' : 'incorrect', 'show');
-                
-                // Show the explanation button
-                const explainButton = card.querySelector('#explainButton');
-                explainButton.classList.remove('hidden');
-
-                // If explanation was already requested, show it
-                if (userAnswers[currentQuestionIndex].explanation) {
-                    const explanationContent = card.querySelector('#explanation-content');
-                    explanationContent.innerHTML = `<h4 class="font-bold mb-2">Explicación:</h4><p>${userAnswers[currentQuestionIndex].explanation}</p>`;
-                    explanationContent.classList.remove('hidden');
-                }
-                
-                nextButton.disabled = false;
-            } else {
-                nextButton.disabled = true;
-            }
-
-            updateNavigationButtons();
-        }
+            quizQuestionsContainer.appendChild(questionDiv);
+        });
         
-        async function getExplanation(questionText, correctAnswer) {
-            const explanationContent = document.getElementById('explanation-content');
-            explanationContent.innerHTML = '<div class="loading-spinner"></div>';
-            explanationContent.classList.remove('hidden');
+        quizTemplate.classList.remove('hidden');
+        startTimer();
+    }
 
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    const answeredQuestions = new Set();
+    
+    function checkAnswer(element, userChoice, correctAnswer, questionIndex, type) {
+        if (answeredQuestions.has(questionIndex)) return;
 
-            const systemPrompt = "Actúa como un tutor de inglés amigable y experto. Explica de manera sencilla y clara la regla gramatical detrás de una pregunta de examen.";
-            const userQuery = `Explica la regla gramatical en español para la siguiente pregunta: "${questionText}". La respuesta correcta es "${correctAnswer}". Proporciona un ejemplo adicional.`;
-            
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: {
-                    parts: [{ text: systemPrompt }]
-                },
-            };
+        const parentDiv = document.getElementById(`question-${questionIndex}`);
+        const feedbackDiv = document.createElement('div');
+        feedbackDiv.classList.add('mt-2', 'font-semibold');
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                const candidate = result.candidates?.[0];
+        const isCorrect = userChoice === correctAnswer;
 
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    const explanationText = candidate.content.parts[0].text;
-                    explanationContent.innerHTML = `<h4 class="font-bold mb-2">Explicación:</h4><p>${explanationText}</p>`;
-                    userAnswers[currentQuestionIndex].explanation = explanationText;
-                } else {
-                    explanationContent.innerHTML = '<p class="text-red-500">Lo siento, no pude generar una explicación. Por favor, inténtalo de nuevo.</p>';
+        if (isCorrect) {
+            correctAnswers++;
+            feedbackDiv.classList.add('correct-answer');
+            feedbackDiv.innerText = '¡Fantástico! Tu respuesta es correcta. ¡Sigue así!';
+            if (type !== 'fill-in-the-blank' && element.style) {
+                element.style.backgroundColor = '#d4edda';
+            }
+        } else {
+            incorrectAnswers++;
+            feedbackDiv.classList.add('incorrect-answer');
+            feedbackDiv.innerText = `¡No te rindas! La respuesta correcta es "${correctAnswer}". Repasa la teoría y vuelve a intentarlo.`;
+            if (type !== 'fill-in-the-blank' && element.style) {
+                element.style.backgroundColor = '#f8d7da';
+            }
+        }
+
+        if (type === 'multiple-choice' || type === 'true-false') {
+            const options = parentDiv.querySelectorAll('.quiz-option');
+            options.forEach(btn => {
+                btn.classList.add('disabled-button');
+                btn.disabled = true;
+                const btnText = (btn.innerText === 'Verdadero' || btn.innerText === 'Falso') ? (btn.innerText === 'Verdadero') : btn.innerText;
+                if (btnText === correctAnswer) {
+                    btn.style.backgroundColor = '#d4edda';
+                    btn.style.borderColor = '#28a745';
                 }
-            } catch (error) {
-                console.error('Error fetching explanation:', error);
-                explanationContent.innerHTML = '<p class="text-red-500">Hubo un error al conectar con el servicio. Por favor, inténtalo de nuevo.</p>';
-            }
-        }
-
-        function handleAnswer(userAnswer) {
-            const q = allQuestions[currentQuestionIndex];
-            const card = questionsContainer.children[0];
-            const feedbackDiv = card.querySelector('.feedback');
-            
-            let isCorrect = false;
-            if (q.type === 'multiple_choice') {
-                isCorrect = userAnswer === q.answer;
-            } else if (q.type === 'true_false') {
-                isCorrect = (userAnswer === 'Verdadero' && q.answer) || (userAnswer === 'Falso' && !q.answer);
-            } else if (q.type === 'fill_in_the_blank') {
-                isCorrect = userAnswer.toLowerCase() === q.answer.toLowerCase();
-            }
-            
-            userAnswers[currentQuestionIndex] = { userAnswer, isCorrect };
-
-            if (isCorrect) {
-                feedbackDiv.textContent = '¡Correcto! ¡Muy bien!';
-                feedbackDiv.classList.add('correct', 'show');
-            } else {
-                feedbackDiv.textContent = `Incorrecto. La respuesta correcta era: ${q.answer}.`;
-                feedbackDiv.classList.add('incorrect', 'show');
-            }
-            
-            const explainButton = document.getElementById('explainButton');
-            explainButton.classList.remove('hidden');
-            nextButton.disabled = false;
-        }
-
-        function updateNavigationButtons() {
-            prevButton.disabled = currentQuestionIndex === 0;
-            if (currentQuestionIndex === allQuestions.length - 1) {
-                nextButton.classList.add('hidden');
-                setTimeout(showResults, 500);
-            } else {
-                nextButton.classList.remove('hidden');
-            }
-        }
-
-        function showResults() {
-            let correctCount = 0;
-            questionsContainer.innerHTML = '';
-            resultsSummary.classList.remove('hidden');
-            
-            allQuestions.forEach((q, index) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                const feedbackDiv = document.createElement('div');
-                feedbackDiv.className = 'feedback show mt-4';
-                
-                let userAnswer = userAnswers[index] ? userAnswers[index].userAnswer : 'No respondida';
-                let isCorrect = userAnswers[index] ? userAnswers[index].isCorrect : false;
-
-                if (isCorrect) {
-                    correctCount++;
-                    feedbackDiv.textContent = '¡Correcto! ¡Muy bien!';
-                    feedbackDiv.classList.add('correct');
-                } else {
-                    feedbackDiv.textContent = `Incorrecto. La respuesta correcta era: ${q.answer}.`;
-                    feedbackDiv.classList.add('incorrect');
-                }
-                
-                let questionContent = `<p class="question-text">Pregunta ${index + 1}: ${q.question}</p>`;
-                questionContent += `<p class="mt-2">Tu respuesta: <span class="font-bold">${userAnswer}</span></p>`;
-                
-                card.innerHTML = questionContent;
-                card.appendChild(feedbackDiv);
-                questionsContainer.appendChild(card);
             });
-
-            resultsSummary.innerHTML = `
-                <h3 class="text-xl font-bold">Resultados</h3>
-                <p class="text-lg mt-2">Obtuviste ${correctCount} de ${allQuestions.length} respuestas correctas.</p>
-                <p class="mt-4 text-green-700 font-bold">¡Sigue practicando y lo lograrás!</p>
-            `;
-            
-            prevButton.classList.add('hidden');
-            nextButton.classList.add('hidden');
-            restartButtonWrapper.classList.remove('hidden');
+        } else if (type === 'fill-in-the-blank') {
+            parentDiv.querySelector('input').disabled = true;
+            parentDiv.querySelector('button').classList.add('disabled-button');
+            parentDiv.querySelector('button').disabled = true;
         }
 
-        startButton.addEventListener('click', () => {
-            studyGuide.classList.add('hidden');
-            quizSection.classList.remove('hidden');
-            startButtonContainer.classList.add('hidden');
-            renderQuestion();
-        });
+        parentDiv.appendChild(feedbackDiv);
+        answeredQuestions.add(questionIndex);
         
-        questionsContainer.addEventListener('click', (e) => {
-            if (e.target.matches('.option')) {
-                const card = e.target.closest('.question-card');
-                const options = card.querySelectorAll('.option');
-                options.forEach(opt => opt.classList.remove('selected'));
-                e.target.classList.add('selected');
-                
-                const userAnswer = e.target.textContent.trim();
-                handleAnswer(userAnswer);
-            } else if (e.target.matches('#explainButton')) {
-                const question = allQuestions[currentQuestionIndex];
-                getExplanation(question.question, question.answer);
+        // **Lógica mejorada**: Si se responden todas las preguntas, el quiz termina.
+        if (answeredQuestions.size === sections[currentSection].quiz.length) {
+            endQuiz();
+        }
+    }
+    
+    function startTimer() {
+        startTime = new Date();
+        timeLeft = 900;
+        const timerEl = document.getElementById('timer');
+        timerEl.innerText = '15:00';
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                endQuiz();
+                return;
             }
-        });
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.innerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }, 1000);
+    }
+
+    function endQuiz() {
+        clearInterval(timerInterval);
         
-        questionsContainer.addEventListener('input', (e) => {
-            if (e.target.matches('input[type="text"]')) {
-                const userAnswer = e.target.value.trim();
-                if (userAnswer !== '') {
-                    handleAnswer(userAnswer);
-                } else {
-                    const card = questionsContainer.children[0];
-                    card.querySelector('.feedback').classList.remove('show', 'correct', 'incorrect');
-                    const explainButton = card.querySelector('#explainButton');
-                    explainButton.classList.add('hidden');
-                    const explanationContent = card.querySelector('#explanation-content');
-                    explanationContent.classList.add('hidden');
-                    nextButton.disabled = true;
-                }
-            }
-        });
-
-        prevButton.addEventListener('click', () => {
-            if (currentQuestionIndex > 0) {
-                currentQuestionIndex--;
-                renderQuestion();
-            }
-        });
-
-        nextButton.addEventListener('click', () => {
-            if (currentQuestionIndex < allQuestions.length - 1 && userAnswers[currentQuestionIndex]) {
-                currentQuestionIndex++;
-                renderQuestion();
-            }
-        });
+        const endTime = new Date();
+        const elapsedTime = Math.floor((endTime - startTime) / 1000);
+        const elapsedMinutes = Math.floor(elapsedTime / 60);
+        const elapsedSeconds = elapsedTime % 60;
         
-        restartButton.addEventListener('click', () => {
-            currentQuestionIndex = 0;
-            userAnswers = {};
-            correctAnswers = 0;
-            quizSection.classList.add('hidden');
-            resultsSummary.classList.add('hidden');
-            restartButtonWrapper.classList.add('hidden');
-            studyGuide.classList.remove('hidden');
-            startButtonContainer.classList.remove('hidden');
-        });
+        document.getElementById('quiz-questions').classList.add('hidden');
+        const resultsDiv = document.getElementById('quiz-results');
+        const scoreText = document.getElementById('score-text');
+        
+        let timeString = '';
+        if (elapsedMinutes > 0) {
+            timeString += `${elapsedMinutes} minuto${elapsedMinutes > 1 ? 's' : ''} y `;
+        }
+        timeString += `${elapsedSeconds} segundo${elapsedSeconds > 1 ? 's' : ''}`;
+        
+        scoreText.innerHTML = `
+            <p>Tiempo total: <strong>${timeString}</strong></p>
+            <p>Respuestas correctas: <span class="correct-answer">${correctAnswers}</span></p>
+            <p>Respuestas incorrectas: <span class="incorrect-answer">${incorrectAnswers}</span></p>
+        `;
+        resultsDiv.classList.remove('hidden');
+        
+        // **Nuevo botón:** Creamos el botón "Volver al Inicio" aquí.
+        // Primero, verificamos si ya existe para no crearlo de nuevo si el quiz se termina por tiempo.
+        let backToMenuBtn = resultsDiv.querySelector('#back-to-menu-btn');
+        if (!backToMenuBtn) {
+            backToMenuBtn = document.createElement('button');
+            backToMenuBtn.id = 'back-to-menu-btn';
+            backToMenuBtn.onclick = showMainMenu;
+            backToMenuBtn.classList.add('mt-8', 'bg-indigo-600', 'text-white', 'py-3', 'px-8', 'rounded-full', 'font-semibold', 'hover:bg-indigo-700', 'transition', 'duration-300', 'transform', 'hover:scale-105');
+            backToMenuBtn.innerHTML = `<i class="fas fa-home mr-2"></i> Volver al Inicio`;
+            resultsDiv.appendChild(backToMenuBtn);
+        }
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            renderQuestion();
-        });
-    </script>
-</body>
-</html>
+    function showMainMenu() {
+        mainMenu.classList.remove('hidden');
+        sectionTemplate.classList.add('hidden');
+        quizTemplate.classList.add('hidden');
+        
+        // Reiniciamos los contadores del quiz para una nueva ronda
+        correctAnswers = 0;
+        incorrectAnswers = 0;
+        answeredQuestions.clear();
+        
+        // Ocultamos la sección de resultados
+        const resultsDiv = document.getElementById('quiz-results');
+        resultsDiv.classList.add('hidden');
+        
+        // Opcional: Si el quiz terminó por tiempo, removemos el botón que se había creado.
+        const backToMenuBtn = resultsDiv.querySelector('#back-to-menu-btn');
+        if (backToMenuBtn) {
+            resultsDiv.removeChild(backToMenuBtn);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        showMainMenu();
+    });
+</script>
